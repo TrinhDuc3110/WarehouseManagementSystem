@@ -1,0 +1,15 @@
+E:\Thesis\WarehousePro\WarehousePro.Application\bin\Release\net9.0\WarehousePro.Application.deps.json
+E:\Thesis\WarehousePro\WarehousePro.Application\bin\Release\net9.0\WarehousePro.Application.dll
+E:\Thesis\WarehousePro\WarehousePro.Application\bin\Release\net9.0\WarehousePro.Application.pdb
+E:\Thesis\WarehousePro\WarehousePro.Application\bin\Release\net9.0\WarehousePro.Domain.dll
+E:\Thesis\WarehousePro\WarehousePro.Application\bin\Release\net9.0\WarehousePro.Domain.pdb
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.csproj.AssemblyReference.cache
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.AssemblyInfoInputs.cache
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.AssemblyInfo.cs
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.csproj.CoreCompileInputs.cache
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\Warehous.95219100.Up2Date
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.dll
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\refint\WarehousePro.Application.dll
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\WarehousePro.Application.pdb
+E:\Thesis\WarehousePro\WarehousePro.Application\obj\Release\net9.0\ref\WarehousePro.Application.dll

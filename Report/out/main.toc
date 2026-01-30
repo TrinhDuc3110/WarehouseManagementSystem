@@ -1,0 +1,117 @@
+\contentsline {chapter}{Acknowledgments}{i}{chapter*.1}%
+\contentsline {chapter}{Contents}{ii}{chapter*.2}%
+\contentsline {chapter}{List of Figures}{v}{chapter*.3}%
+\contentsline {chapter}{List of Tables}{vi}{chapter*.4}%
+\contentsline {chapter}{Abstract}{vii}{chapter*.5}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problem Statement}{1}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}The "Ghost Stock" Phenomenon}{1}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Forecasting is a Guessing Game}{1}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Data Entry is Boring and Error-Prone}{2}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}Disconnected Systems (Data Silos)}{2}{subsection.1.2.4}%
+\contentsline {section}{\numberline {1.3}Scope and Objectives}{2}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Project Objectives}{2}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Technologies Used}{3}{subsection.1.3.2}%
+\contentsline {subsubsection}{Technical Stack}{3}{subsubsection*.6}%
+\contentsline {subsubsection}{Key Modules}{3}{subsubsection*.7}%
+\contentsline {section}{\numberline {1.4}Assumption and Solution Strategy}{4}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Project Assumptions}{4}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Proposed Solution Strategy}{4}{subsection.1.4.2}%
+\contentsline {section}{\numberline {1.5}Thesis Structure}{5}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Literature Review and Related Work}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Theoretical Background}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Overview of Warehouse Management System (WMS)}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Evolution of Inventory Management}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Core Operational Processes}{9}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Review of Existing Solutions}{10}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}High-End: SAP Extended Warehouse Management (SAP EWM)}{11}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Mid-Range: Odoo Inventory (Open Source)}{11}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Low-End: Microsoft Excel}{12}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Technology Stack Selection}{12}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Backend: ASP.NET Core 8.0 (Web API)}{12}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Frontend: ReactJS with Ant Design}{13}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Intelligence and Communication Layers}{14}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Database: Microsoft SQL Server \& EF Core}{14}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Core Design Mechanisms}{14}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Real-time Communication (Publish-Subscribe Pattern)}{14}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}AI Structured Output Strategy}{15}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Security Considerations}{15}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Methodology and System Design}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}System Overview and Architecture}{17}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Architectural Pattern (Clean Architecture)}{17}{subsection.3.1.1}%
+\contentsline {subsubsection}{1. Domain Layer (The Core)}{17}{subsubsection*.11}%
+\contentsline {subsubsection}{2. Application Layer}{17}{subsubsection*.12}%
+\contentsline {subsubsection}{3. Infrastructure Layer}{18}{subsubsection*.13}%
+\contentsline {subsubsection}{4. Presentation Layer (API)}{18}{subsubsection*.14}%
+\contentsline {subsection}{\numberline {3.1.2}Deployment Strategy (Dockerization)}{19}{subsection.3.1.2}%
+\contentsline {subsubsection}{Container 1: Client Service (Frontend)}{19}{subsubsection*.16}%
+\contentsline {subsubsection}{Container 2: API Service (Backend)}{20}{subsubsection*.17}%
+\contentsline {subsubsection}{Container 3: Database Service}{20}{subsubsection*.18}%
+\contentsline {section}{\numberline {3.2}Functional Requirements Analysis}{20}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}System Actors}{20}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Functional Specifications}{21}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Use Case Diagram}{22}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Detailed Use Case Specifications}{23}{section.3.3}%
+\contentsline {subsubsection}{UC-01: User Authentication (Login)}{23}{subsubsection*.22}%
+\contentsline {subsubsection}{UC-02: Import Goods (Inbound)}{24}{subsubsection*.25}%
+\contentsline {subsubsection}{UC-03: Intelligent Query with AI Assistant}{26}{subsubsection*.28}%
+\contentsline {subsubsection}{UC-04: Internal Communication (Real-time Chat)}{28}{subsubsection*.31}%
+\contentsline {subsubsection}{UC-05: Dashboard \& Analytics}{29}{subsubsection*.34}%
+\contentsline {section}{\numberline {3.4}Database Design}{30}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Entity-Relationship Diagram (ERD)}{30}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Database Schema Specification}{31}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Database Schema Specification}{31}{subsection.3.4.3}%
+\contentsline {subsubsection}{Table: Product}{31}{subsubsection*.38}%
+\contentsline {subsubsection}{Table: Partner}{32}{subsubsection*.40}%
+\contentsline {subsubsection}{Table: Transaction}{32}{subsubsection*.42}%
+\contentsline {subsubsection}{Table: Payment}{33}{subsubsection*.44}%
+\contentsline {subsubsection}{Table: AuditLog}{33}{subsubsection*.46}%
+\contentsline {section}{\numberline {3.5}Structural Design (Class Diagram)}{34}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Backend Class Structure}{34}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Design Patterns Applied}{36}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}Behavioral Design (Sequence Diagrams)}{37}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Import Goods Process with Automated Mailing (UC-02)}{37}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}AI Intelligent Query Process (UC-03)}{38}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Real-time Internal Chat Process (UC-04)}{39}{subsection.3.6.3}%
+\contentsline {section}{\numberline {3.7}Chapter Summary}{40}{section.3.7}%
+\contentsline {chapter}{\numberline {4}Implementation and Results}{42}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Development Environment \& Tools}{42}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Hardware Configuration}{42}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Software \& Technology Stack}{43}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Implementation Details}{43}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Backend Structure (Clean Architecture Implementation)}{44}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}AI Assistant Integration (Semantic Kernel)}{45}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Smart Email \& OCR Integration}{46}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Installation \& Configuration (Local Development)}{47}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}1. AI Engine Setup (Ollama)}{47}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}2. Backend Configuration}{47}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}Experimental Results \& UI Demonstration}{48}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}1. Authentication Module}{48}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}2. Dashboard \& Analytics}{49}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}3. Smart Import with OCR}{50}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}4. AI Assistant Interface}{51}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}5. Internal Chat System}{52}{subsection.4.4.5}%
+\contentsline {section}{\numberline {4.5}Performance Evaluation}{53}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}1. API Response Time Analysis}{53}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}2. AI Intent Recognition Accuracy}{53}{subsection.4.5.2}%
+\contentsline {chapter}{\numberline {5}Discussion and Evaluation}{55}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Comparative Analysis with Market Solutions}{55}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Reflection on Architectural \& Technical Decisions}{57}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}1. The Efficacy of Clean Architecture}{57}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}2. Local LLM vs. Cloud APIs}{57}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}3. Function Calling Pattern over RAG}{57}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Current Limitations}{58}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Future Work}{58}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}1. Mobile Application Development}{58}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}2. Voice-Activated Commands}{58}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}3. Multi-Warehouse Support}{58}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}Conclusion}{59}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Conclusion and Future Work}{60}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{60}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{60}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}1. Mobile Application Development (React Native)}{61}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}2. Voice-Activated AI Operations}{61}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}3. Hybrid AI Strategy}{61}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}4. Scaling with Redis \& Microservices}{61}{subsection.6.2.4}%
+\contentsline {chapter}{Bibliography}{62}{chapter*.64}%

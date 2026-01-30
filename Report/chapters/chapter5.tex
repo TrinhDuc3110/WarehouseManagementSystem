@@ -1,0 +1,119 @@
+% =================================================================
+% CHAPTER 5: DISCUSSION AND EVALUATION
+% =================================================================
+\chapter{Discussion and Evaluation}
+\label{chap:discussion}
+
+From examining the theoretical concepts in Chapter 2 to developing the actual system in Chapter 4, the project has transitioned from abstract requirements to a functional solution. Now, it is imperative to step back and evaluate the product with a critical perspective. In this chapter, I address the fundamental question: \textit{Does "Warehouse Pro" genuinely offer a superior alternative to existing tools for SMEs, or is it merely another CRUD application?}
+
+This chapter provides an in-depth comparative analysis, reflects on the architectural trade-offs made during development, and candidly discusses the limitations that future iterations must address.
+
+% =================================================================
+% 5.1 SO SÁNH VỚI CÁC GIẢI PHÁP KHÁC
+% =================================================================
+\section{Comparative Analysis with Market Solutions}
+In Chapter 2, I examined prominent entities such as **SAP EWM** and **Odoo Inventory**. While powerful, these systems often suffer from the "Enterprise Bloat" problem—too complex and expensive for small businesses.
+
+Table \ref{tab:comparison} highlights how "Warehouse Pro" strategically positions itself to fill the gap for **Tech-forward SMEs** (Small and Medium-sized Enterprises).
+
+\begin{table}[H]
+\centering
+\caption{Benchmarking: Warehouse Pro vs. Market Standards}
+\label{tab:comparison}
+\renewcommand{\arraystretch}{1.5}
+\small
+\begin{tabular}{|>{\raggedright\arraybackslash}p{3cm}|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{3.8cm}|>{\raggedright\arraybackslash}p{3.8cm}|}
+\hline
+\textbf{Criteria} & \textbf{Traditional ERP \newline (e.g., SAP, Oracle)} & \textbf{Modern SaaS \newline (e.g., Odoo, KiotViet)} & \textbf{Warehouse Pro \newline (My Solution)} \\ \hline
+\textbf{Target Audience} & Large Enterprises with complex supply chains. & General retailers and small shops. & \textbf{SMEs requiring AI automation \& privacy.} \\ \hline
+\textbf{Interaction Model} & Static Dashboards \& Complex Menus. & Click-based UI, Form filling. & \textbf{Conversational UI (Natural Language Querying).} \\ \hline
+\textbf{Data Privacy} & High (On-premise), but extremely expensive. & Low to Medium (Cloud-hosted). & \textbf{Maximum (Local LLM \& Database).} \\ \hline
+\textbf{Communication} & External tools (Email) or separate modules. & Notification bells. & \textbf{Integrated Real-time Chat (Context-aware).} \\ \hline
+\textbf{Cost Structure} & High Licensing + Infrastructure fees. & Monthly Subscription (SaaS). & \textbf{One-time Deployment (Dockerized).} \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Critical Analysis of Competitive Advantages:}
+\begin{itemize}
+    \item \textbf{The "Conversational" Shift:} Traditional ERPs require users to navigate through 5-6 layers of menus to find "Low Stock Items." My solution democratizes data access. A manager can simply ask the \textbf{AI Assistant}, reducing the "Time-to-Insight" from minutes to seconds.
+    \item \textbf{Privacy-First AI:} Most modern "Smart" apps rely on sending data to OpenAI (ChatGPT), which is a security risk for sensitive inventory data. By using **Ollama (Llama 3.1)** locally, "Warehouse Pro" ensures that business secrets never leave the company's internal network.
+    \item \textbf{Contextual Communication:} Instead of switching to Zalo or Messenger to discuss an invoice (fragmenting information), the **SignalR Chat** allows staff to discuss directly within the application, keeping the context attached to the workflow.
+\end{itemize}
+
+% =================================================================
+% 5.2 ĐÁNH GIÁ CÁC QUYẾT ĐỊNH KỸ THUẬT
+% =================================================================
+\section{Reflection on Architectural \& Technical Decisions}
+Every software architecture involves trade-offs. Here, I evaluate the effectiveness of the key technical decisions made during the project.
+
+\subsection{1. The Efficacy of Clean Architecture}
+Initially, implementing Clean Architecture seemed like over-engineering for a student project. However, as the complexity grew with the integration of AI and SignalR, this structure proved its value.
+\begin{itemize}
+    \item \textbf{Decoupling AI Logic:} When I decided to switch the AI Engine (hypothetically from OpenAI to local Llama 3), I only needed to modify the `Infrastructure Layer`. The Core Domain and API Controllers remained untouched. This proves the system's high maintainability.
+    \item \textbf{Testability:} The separation allowed me to mock the `IProductRepository` easily, ensuring that my business logic was bug-free before connecting to the actual SQL database.
+\end{itemize}
+
+\subsection{2. Local LLM vs. Cloud APIs}
+Choosing to host **Llama 3.1 (8B parameter)** locally via Ollama instead of calling the GPT-4 API was a bold decision. 
+\begin{itemize}
+    \item \textbf{The Drawback:} It requires a machine with at least 8GB - 16GB of RAM, and the inference time ($\approx$ 2-3 seconds) is slower than cloud APIs.
+    \item \textbf{The Strategic Value:} It guarantees **Data Sovereignty**. For logistics companies, inventory data is their lifeblood. The ability to run "Smart Queries" without exposing data to third parties is a massive selling point that outweighs the hardware cost.
+\end{itemize}
+
+\subsection{3. Function Calling Pattern over RAG}
+I opted for the **Function Calling** pattern (via Semantic Kernel) rather than the popular RAG (Retrieval-Augmented Generation).
+\begin{itemize}
+    \item \textbf{Reasoning:} RAG is great for reading documents, but poor at precise calculations. Warehouse management requires exact numbers (e.g., "Stock is 50", not "About 50").
+    \item \textbf{Result:} Function Calling allows the AI to execute SQL queries precisely, ensuring 100\% data accuracy while maintaining the flexibility of natural language.
+\end{itemize}
+
+% =================================================================
+% 5.3 CÁC HẠN CHẾ
+% =================================================================
+\section{Current Limitations}
+Despite the successful implementation, the system has inherent limitations due to the constraints of a graduation project.
+
+\begin{enumerate}
+    \item \textbf{Hardware Dependency for AI:} 
+    Running a Local LLM imposes a significant hardware requirement. If deployed on a cheap VPS (e.g., 2GB RAM), the AI module will crash. This limits the "Low Cost" advantage unless the company already has a decent on-premise server.
+    
+    \item \textbf{OCR Sensitivity:} 
+    The \texttt{Tesseract.js} engine is strictly rule-based. It performs excellently on clear, high-contrast scans but struggles with wrinkled receipts or poor lighting conditions. A cloud-based Vision API (like Google Vision) would be more robust but would violate the "Local-only" privacy policy.
+    
+    \item \textbf{Single-Node SignalR:} 
+    Currently, the Real-time Chat uses a single server instance. If the system scales to thousands of concurrent users, a single node will become a bottleneck. Production deployment would require **Redis Backplane** to scale SignalR across multiple servers.
+\end{enumerate}
+
+% =================================================================
+% 5.4 HƯỚNG PHÁT TRIỂN (FUTURE WORK)
+% =================================================================
+\section{Future Work}
+To evolve "Warehouse Pro" from a prototype to a commercial-grade product, the following enhancements are proposed:
+
+\subsection{1. Mobile Application Development}
+Warehouse staff are rarely sitting at desks. Developing a **React Native** mobile app would allow staff to:
+\begin{itemize}
+    \item Scan barcodes using the phone's camera while walking through aisles.
+    \item Receive push notifications for chat messages instantly.
+\end{itemize}
+
+\subsection{2. Voice-Activated Commands}
+Integrating **Whisper (Speech-to-Text)** would allow hands-free operation. Staff could simply say "Import 50 units of Samsung TV" while holding the boxes, further streamlining the workflow.
+
+\subsection{3. Multi-Warehouse Support}
+Currently, the system assumes a single location. Future updates should introduce a "Location" entity to manage stock transfers between different branches (e.g., HCMC Branch $\rightarrow$ Hanoi Branch).
+
+% =================================================================
+% 5.5 KẾT LUẬN
+% =================================================================
+\section{Conclusion}
+This thesis set out to solve the digital transformation puzzle for SMEs by balancing **Functionality, Usability, and Intelligence**. 
+
+"Warehouse Pro" successfully demonstrates that:
+\begin{itemize}
+    \item \textbf{Modern Architecture} (.NET 8 + React) provides a solid foundation for scalability.
+    \item \textbf{Generative AI} can be practically applied in logistics not just for "chatting" but for executing precise data operations via Function Calling.
+    \item \textbf{Real-time Features} (SignalR) significantly enhance operational coordination.
+\end{itemize}
+
+While there are hardware challenges associated with local AI hosting, the benefits of privacy and seamless integration present a compelling case for the future of intelligent warehouse management systems.

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # 1. DATABASE (SQL Server)
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: warehouse_db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123!@#
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+      - ./data.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # 2. BACKEND API
+  backend:
+    container_name: warehouse_backend
+    build:
+      # 👇 SỬA Ở ĐÂY: Trỏ vào thư mục WarehousePro
+      context: ./WarehousePro
+      # 👇 Dockerfile nằm trong thư mục con WarehousePro.API (tính từ context ở trên)
+      dockerfile: WarehousePro.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=80
+      - ConnectionStrings__DefaultConnection=Server=warehouse_db;Database=WarehouseProDb;User Id=sa;Password=Password123!@#;TrustServerCertificate=True;
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+
+  # 3. FRONTEND (ReactJS)
+  frontend:
+    container_name: warehouse_frontend
+    build:
+      # 👇 Đảm bảo thư mục này đúng (dựa theo dir của bạn là đúng rồi)
+      context: ./WarehouseProFE/client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  sql_data:

@@ -1,0 +1,12 @@
+E:\Thesis\WarehousePro\WarehousePro.Domain\bin\Release\net9.0\WarehousePro.Domain.deps.json
+E:\Thesis\WarehousePro\WarehousePro.Domain\bin\Release\net9.0\WarehousePro.Domain.dll
+E:\Thesis\WarehousePro\WarehousePro.Domain\bin\Release\net9.0\WarehousePro.Domain.pdb
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.csproj.AssemblyReference.cache
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.AssemblyInfoInputs.cache
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.AssemblyInfo.cs
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.csproj.CoreCompileInputs.cache
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.dll
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\refint\WarehousePro.Domain.dll
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\WarehousePro.Domain.pdb
+E:\Thesis\WarehousePro\WarehousePro.Domain\obj\Release\net9.0\ref\WarehousePro.Domain.dll

@@ -1,0 +1,162 @@
+\chapter{Literature Review and Related Work}
+
+In this chapter, I provide the theoretical framework necessary for comprehending the Warehouse Management System (WMS) domain.  I also look at other solutions on the market to show their flaws, which helps explain the technological stack and algorithm choices chosen for the "Warehouse Pro" project.
+
+% =================================================================
+% 2.1 LÝ THUYẾT NỀN TẢNG
+% =================================================================
+\section{Theoretical Background}
+
+\subsection{Overview of Warehouse Management System (WMS)}
+A warehouse management system (WMS) is more than simply software; it's the most critical part of how supply chains work.  Based on my study, a contemporary WMS is an integrated system that keeps track of the flow of inventory from the time it arrives at the warehouse (Receiving) until it leaves the warehouse (Shipping).  It has a lot of different features, such as tracking inventory, filling orders, managing employees, and making reports.
+
+A WMS answers the age-old question for small and medium-sized businesses (SMEs):  "Is this item really in stock, or is it just a number in Excel?" The most important parts of WMS are \textbf{Visibility} and \textbf{Traceability}, which make sure that real-time records of physical stock match those in the system.
+
+\subsection{Evolution of Inventory Management}
+Based on the digitalization process of businesses in Vietnam, I categorize inventory management into three stages:
+
+\begin{itemize}
+    \item \textbf{Stage 1 - Manual (The Paper Era):} Relying on physical "Bin Cards" and memory. This method is low-cost but highly prone to human error and data loss (e.g., lost notebooks).
+    \item \textbf{Stage 2 - Digital Silos (Spreadsheets):} 
+    Many businesses upgrade from paper to tools like Microsoft Excel. While this is a step up, it introduces a new problem: "Data Silos." Excel files usually live on a single computer. If a warehouse staff updates the stock level, the Sales team won't see that change until someone manually emails the file. This delay often leads to overselling—selling items that are already out of stock—causing customer complaints. Additionally, generating reports is painful because managers have to wait for end-of-month consolidation instead of seeing real-time data.
+    \item \textbf{Stage 3 - Connected WMS (The Goal):} 
+    This is what "Warehouse Pro" wants to be in the current world.  The Cloud stores all of the data.  As soon as a barcode is read in the warehouse, the numbers change for everyone, from Sales to Accounting.
+\end{itemize}
+
+\subsection{Core Operational Processes}
+I looked at the lifetime of a product at a warehouse to figure out how to write the software logic correctly.  The method is based on four main activities:
+\begin{enumerate}
+    \item \textbf{Inbound (Receiving):} The system has to check that the products that come in match the Purchase Orders.  This step is also important to avoid "phantom inventory," which is when you pay suppliers for things that never show up.
+    \item \textbf{Storage (Put-away):} This means choosing where to put things.  Use logic here; for example, put things that are in great demand near the dispatch area so that workers don't have to travel as far.
+    \item \textbf{Order Processing (Picking):} This phase usually takes the most work.  The program has to behave like a GPS, showing workers exactly where to go to get the proper item promptly. \item \textbf {Outbound (Shipping):}  The last barrier for validation.  Before the vehicle leaves, the system makes sure that the products leaving the warehouse are exactly what the client ordered.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    % Hãy đảm bảo bạn có hình ảnh minh họa quy trình (ví dụ: Inbound -> Putaway -> Picking -> Outbound)
+    \includegraphics[width=0.9\textwidth]{images/warehouse_flow.png} 
+    \caption{Standard Workflow of a Warehouse Operation}
+    \label{fig:warehouse_flow}
+\end{figure}
+
+% =================================================================
+% 2.2 PHÂN TÍCH ĐỐI THỦ (REVIEW EXISTING SOLUTIONS)
+% =================================================================
+\section{Review of Existing Solutions}
+Before making my own system, I looked into a few well-known ones to see why they might not work for all businesses.
+
+\subsection{High-End: SAP Extended Warehouse Management (SAP EWM)}
+SAP is the industry standard for large enterprises.
+\begin{itemize}
+    \item \textbf{Strengths:} SAP has many great benefits, such as bringing together all of a company's data and processes to boost productivity and efficiency; improving financial, supply chain, and warehouse management; making decisions easier with powerful data analytics; making centralized data security stronger; and being able to grow with businesses of all sizes.
+    \item \textbf{Weaknesses for SMEs:} Problems for small and medium-sized businesses (SMEs):  Very complicated.  The interface is hard to use, and the cost of licenses (which may be hundreds of thousands of dollars) is too exorbitant for small organizations.  Additionally, developers need an IT staff to run SAP, which takes a lot of time and money.
+\end{itemize}
+
+\subsection{Mid-Range: Odoo Inventory (Open Source)}
+Odoo is a popular modular ERP built with Python.
+\begin{itemize}
+    \item \textbf{Strengths:} Comprehensive and well-integrated: Offers a lot of modules (CRM, Accounting, Sales, Inventory, etc.) on one platform, and the data is synced across departments.  Adaptable and customizable:  With open-source code, you may make a lot of changes to it, which lets you add features that are specific to your company needs and work well with other software. Easy to use: A contemporary, intuitive, and simple interface helps staff learn how to use the system fast. Cost-effective: The Community version is free, and the Enterprise edition is reasonably priced for small and medium-sized businesses. This means that businesses may save money on startup expenditures compared to standard ERP systems.  Easily scalable: Add features and users as needed to keep up with business growth.
+    \item \textbf{Weaknesses:} Limited Support (Community): The free version doesn't have official vendor support; it only has support from the community.  Difficult to Set Up and Customize: Setting up, configuring, and customizing anything in depth takes technical knowledge and can be expensive and time-consuming.  Performance and Security: The Community edition may not have all the sophisticated security measures, and performance may drop when there is a lot of traffic.  You need to know a lot to do this:  Sometimes, managing and optimizing a system requires both business and technical knowledge.
+\end{itemize}
+
+\subsection{Low-End: Microsoft Excel}
+\begin{itemize}
+    \item \textbf{Strengths:} Low cost/Free: Excel is a common and popular program that doesn't need any specific software to work.  It's easy to use and change: Most people know how to use it, so it's straightforward to make spreadsheets and add or change columns and rows as needed.  Easy to use and easy to set up:  Easy to set up for basic purposes without needing any special skills.
+    \item \textbf{Weaknesses:} Bad security: It's easy to get to, modify, or lose data (because of file faults or viruses), and it's hard to keep track of the history of changes.  Likely to make mistakes:  while there are a lot of items, it's easy to make mistakes while entering data by hand.  Not having data in real time:  Needs to be updated by hand, which might mean that the inventory information is out of current.  Not easy to scale: Not good for big companies with a lot of warehouses or branches to manage.  Advanced features are few:  Hard to keep track of by barcode, batch number, and expiration date; reporting and analyzing by hand takes a lot of time.     Hard to work together:  When more than one person tries to access and change files at the same time, there is a good chance of problems.
+\end{itemize}
+
+\textbf{Conclusion:} In brief, we need a solution that is between Excel and SAP: it needs to be cheap, easy to use, powerful, and able to work in real time.  "Warehouse Pro" is designed to cover this exact need.
+
+% =================================================================
+% 2.3 TECH STACK (PHẦN QUAN TRỌNG VỚI SINH VIÊN IT)
+% =================================================================
+\section{Technology Stack Selection}
+The selection of a robust technology stack is fundamental to ensuring the system's performance, scalability, and long-term maintainability. This section justifies the choice of modern frameworks and tools tailored to meet the specific requirements of the Warehouse Pro system.
+
+\subsection{Backend: ASP.NET Core 8.0 (Web API)}
+ASP.NET Core 8.0 was selected as the core engine for the backend due to its industry-leading performance and reliability.
+\begin{itemize}
+    \item \textbf{High Performance:} Built on the Kestrel web server, .NET 8 is optimized for high-concurrency scenarios, which is crucial when multiple warehouse staff are performing simultaneous inventory scans and updates.
+    \item \textbf{Type Safety and Stability:} The use of C\# provides a statically-typed environment, allowing for compile-time error detection. This significantly reduces runtime failures in critical business logic such as debt calculation or stock deduction.
+    \item \textbf{AI Orchestration Readiness:} Unlike traditional frameworks, .NET 8 integrates seamlessly with **Semantic Kernel**, allowing the backend to orchestrate Large Language Models (LLMs) locally without the overhead of external Python microservices.
+    \item \textbf{Clean Architecture Support:} The framework naturally supports a layered architecture (Separation of Concerns), making it easier to implement, test, and maintain complex business rules independently of the database or UI.
+\end{itemize}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/dotnet_arch.png}
+    \caption{Layered Architecture in ASP.NET Core}
+    \label{fig:dotnet_arch}
+\end{figure}
+
+\subsection{Frontend: ReactJS with Ant Design}
+For the client-side, **ReactJS** was chosen to deliver a fluid, "app-like" experience essential for fast-paced warehouse environments.
+\begin{itemize}
+    \item \textbf{Efficient UI Rendering (Virtual DOM):} React only updates the specific components that change, ensuring the UI remains responsive even when handling large tables of inventory data.
+    \item \textbf{Component-Based Development:} By utilizing reusable UI components, the development process is accelerated, and the interface remains consistent across various modules like the Transaction Hub or Reporting.
+    \item \textbf{Professional UI with Ant Design (AntD):} To ensure a high-standard enterprise appearance, Ant Design is integrated to provide sophisticated, accessible, and responsive UI components (Data Grids, Modals, Charts) without extensive custom CSS.
+    \item \textbf{Real-time Integration:} React's ecosystem allows for seamless integration with **SignalR**, enabling the dashboard and chat rooms to reflect live changes without manual page refreshes.
+\end{itemize}
+
+\subsection{Intelligence and Communication Layers}
+To fulfill the requirements for an intelligent assistant and automated communication, the following specialized libraries are integrated:
+\begin{itemize}
+    \item \textbf{Semantic Kernel \& Ollama:} Used to bridge the Web API with the **Llama 3.1** model. This setup allows for private, local AI processing of warehouse data, powering the AI Chatbot Assistant.
+    \item \textbf{SignalR:} Facilitates bi-directional communication between the server and the clients, supporting the **Internal Chat Room** and live stock alerts.
+    \item \textbf{FluentEmail \& MailKit:} These libraries provide a robust engine for managing email templates and automating the delivery of transaction-based invoices and notifications.
+\end{itemize}
+
+\subsection{Database: Microsoft SQL Server \& EF Core}
+Data integrity is paramount in warehouse management, where inventory records directly represent financial assets.
+\begin{itemize}
+    \item \textbf{ACID Compliance:} SQL Server ensures that all transactions are Atomic, Consistent, Isolated, and Durable. This prevents data corruption if a connection is lost during a critical stock transfer.
+    \item \textbf{Relational Integrity:} The structured nature of SQL is ideal for managing complex relationships between Products, Categories, Suppliers, and historical Transaction Logs.
+    \item \textbf{Entity Framework Core (Code First):} This Object-Relational Mapper (ORM) allows for efficient database management and schema evolution through migrations, ensuring the database remains in sync with the backend logic.
+\end{itemize}
+
+% =================================================================
+% 2.4 CƠ SỞ TOÁN HỌC (AI & ALGORITHMS)
+% =================================================================
+\section{Core Design Mechanisms}
+Instead of focusing on complex theoretical algorithms, this project prioritizes robust software engineering patterns to ensure reliability and user experience. The two fundamental mechanisms employed are the Real-time Event Pattern and Structured AI Prompting.
+
+\subsection{Real-time Communication (Publish-Subscribe Pattern)}
+To achieve the "Real-time Visibility" objective, the system utilizes the \textbf{Publish-Subscribe (Pub/Sub)} pattern via SignalR. This mechanism decouples the sender from the receiver, allowing for scalable notifications.
+
+\textbf{Workflow Mechanism:}
+\begin{enumerate}
+    \item \textbf{The Hub (Publisher):} Acts as a central message broker. When a transaction occurs (e.g., \textit{Stock Updated}), the backend pushes an event to the "WarehouseHub".
+    \item \textbf{The Client (Subscriber):} The React frontend maintains a persistent connection (via WebSockets) and listens for specific event names.
+    \item \textbf{Broadcasting:} The Hub creates a localized group (e.g., "Managers") and broadcasts the data payload only to authorized connected clients, ensuring security and efficiency.
+\end{enumerate}
+
+\subsection{AI Structured Output Strategy}
+Since the system integrates a Generative AI model (Llama 3.1), the challenge is ensuring the AI returns data that the computer can process, not just chatty text. I implemented a **System Instruction Strategy**.
+
+\textbf{Prompt Engineering Approach:}
+\begin{itemize}
+    \item \textbf{Role Definition:} The AI is explicitly configured with a "System Prompt" that defines its persona: \textit{"You are a JSON-only Warehouse Assistant."}
+    \item \textbf{Constraint Enforcement:} The prompt strictly forbids Markdown or conversational filler, forcing the model to output raw JSON format.
+    \item \textbf{Error Handling:} The backend service parses the AI's response using a strict JSON deserializer. If the AI hallucinates or breaks the format, the system catches the exception and returns a fallback message, ensuring the app never crashes.
+\end{itemize}
+
+% =================================================================
+% 2.5 SECURITY
+% =================================================================
+\section{Security Considerations}
+While I was working on this program, I learned that security isn't just an extra feature; it's a must-have.   To keep user data safe and the system working properly, I added a lot of levels of protection. Here are some of the most important security features I added:
+\begin{itemize}
+    \item \textbf{Authentication (JWT):} I utilized JSON Web Tokens (JWT) to allow people sign in. This stateless technique means that the server doesn't have to retain session data in memory. This makes the service easier to scale and lets more people use it at the same time.
+
+    \item \textbf{Authorization (RBAC):} Authentication alone isn't enough. I utilized Role-Based Access Control (RBAC) to tell the difference between users like Admin and Staff. This makes sure that a regular worker can't delete data or get to essential administrative operations.
+
+    \item \textbf{Password Protection:} I always follow the guideline that I should never keep passwords in plain text to safeguard them.   Use BCrypt instead. This is a hashing method that adds "salt" to each password and is known to work. Even if the data is taken, this maintains the database safe from rainbow table attacks.
+
+    \item \textbf{Preventing SQL Injection:} I didn't utilize raw SQL string concatenation to protect the database against injection attacks. Instead, I utilized the ORM (Object-Relational Mapping) framework. It automatically uses parameterized queries to get rid of all user inputs.
+
+    \item \textbf{Cross-Site Scripting (XSS):} I utilized React's built-in security tools on the front end. Before transmitting data to the DOM, React automatically escapes it. This makes it far less probable that harmful scripts will sneak into the program.
+
+    \item \textbf{API Security (CORS):} I put up Cross-Origin Resource Sharing (CORS) rules so that only requests from my frontend application's domain may utilize my backend API. This forbids other websites from using it without authorization.
+\end{itemize}

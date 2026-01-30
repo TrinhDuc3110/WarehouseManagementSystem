@@ -1,0 +1,66 @@
+\documentclass[12pt, a4paper, oneside]{report}
+
+% --- Import cài đặt ---
+\input{settings/style.tex} 
+
+\begin{document}
+
+% ===================================================
+%  PHẦN 1: FRONT MATTER (Trang bìa, Lời cảm ơn...)
+% ===================================================
+\input{titlepage} 
+
+\pagenumbering{roman} 
+
+\chapter*{ACKNOWLEDGMENTS}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+
+Completing this graduation thesis is the culmination of a long, challenging, yet incredibly meaningful journey. It not only marks the end of four years of study but also represents the fruits of my tireless efforts, perseverance, and unwavering support from those around me. I understand that without their companionship and encouragement, this project would certainly not have been completed so fully.
+
+My deepest gratitude goes to Professor Le Thanh Son. I sincerely thank him for his dedicated guidance and unwavering belief in me from the very beginning of my thesis development. Throughout the process, his insightful professional advice, scientific thinking, and patience helped me overcome the most challenging stages of the project. He not only imparted knowledge but also served as a shining example of serious work ethic, something I will always carry with me in my future career.
+
+I would like to express my sincere gratitude to the Board of Directors of the International University - Vietnam National University Ho Chi Minh City for creating a modern and dynamic learning environment. In particular, I would like to thank the lecturers at the Faculty of Computer Science and Engineering. Their dedicated lectures and invaluable knowledge imparted over the years have been the most important tools in helping me build and develop this project. The support from the university has provided optimal conditions for me to conduct research and complete my thesis in the best possible way.
+
+To my friends and teammates who have stood by my side: thank you for the hours spent researching together in the library, the sleepless nights spent debugging, and the intense yet enjoyable discussions. Your timely encouragement and sincere feedback have helped me maintain my spirit and continuously improve my work. We began this journey together as bewildered freshmen, and today, I am so happy to see all of us proudly moving towards our destination.
+
+Finally, and most importantly, I would like to express my deepest gratitude to my parents and family. I thank my parents for always being my unwavering support and the greatest source of encouragement, both materially and spiritually. Their absolute trust and unconditional love have given me the strength to strive my best, overcome all obstacles, and achieve what I have today. I dedicate this achievement to my parents as a small token of appreciation for their silent sacrifices over the years.
+
+Although I have put a lot of effort into this thesis, it is certainly not without shortcomings. I sincerely hope to receive valuable feedback from my professors and friends to further improve this project.
+
+
+% Mục lục & Danh sách
+\tableofcontents
+\listoffigures
+\listoftables
+
+% Tóm tắt (Abstract)
+\clearpage
+\input{abstract}
+\clearpage
+
+% ===================================================
+%  PHẦN 2: MAIN MATTER (Nội dung chính)
+% ===================================================
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Gọi các chương (Nếu chương nào bị lỗi, bạn có thể comment tạm dòng đó lại để kiểm tra)
+\input{chapters/chapter1}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+\input{chapters/chapter5}
+\input{chapters/chapter6}
+
+% ===================================================
+%  PHẦN 3: TÀI LIỆU THAM KHẢO (BIBLIOGRAPHY)
+% ===================================================
+\clearpage
+\nocite{*} 
+
+% Thiết lập kiểu và gọi file .bib
+\bibliographystyle{plain}
+\bibliography{references} 
+
+
+\end{document}

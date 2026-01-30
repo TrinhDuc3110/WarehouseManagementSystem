@@ -1,0 +1,19 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Program.cs \PYGZhy{} \PYGZdq{}Wiring\PYGZdq{} the application}
+\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{builder}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{WebApplication}\PYG{p}{.}\PYG{n}{CreateBuilder}\PYG{p}{(}\PYG{n}{args}\PYG{p}{);}
+
+\PYG{c+c1}{// 1. Database Context}
+\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{connectionString}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Configuration}\PYG{p}{.}\PYG{n}{GetConnectionString}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}DefaultConnection\PYGZdq{}}\PYG{p}{);}
+\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddDbContext}\PYG{o}{\PYGZlt{}}\PYG{n}{ApplicationDbContext}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{    }\PYG{n}{options}\PYG{p}{.}\PYG{n}{UseSqlServer}\PYG{p}{(}\PYG{n}{connectionString}\PYG{p}{));}
+
+\PYG{c+c1}{// 2. Register Repositories}
+\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{IProductRepository}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ProductRepository}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{IChatRepository}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ChatRepository}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{c+c1}{// 3. Register Advanced Services (AI \PYGZam{} Email)}
+\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddSingleton}\PYG{o}{\PYGZlt{}}\PYG{n}{IEmailService}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{EmailService}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{IAIAssistantService}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{AIAssistantService}\PYG{o}{\PYGZgt{}}\PYG{p}{();}\PYG{+w}{ }\PYG{c+c1}{// Semantic Kernel}
+
+\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{app}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Build}\PYG{p}{();}
+\end{MintedVerbatim}

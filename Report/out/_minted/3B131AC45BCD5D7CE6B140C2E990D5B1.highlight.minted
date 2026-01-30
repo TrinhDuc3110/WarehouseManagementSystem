@@ -1,0 +1,22 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Infrastructure/AI/WarehousePlugin.cs}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{WarehousePlugin}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{IProductRepository}\PYG{+w}{ }\PYG{n}{\PYGZus{}repo}\PYG{p}{;}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{WarehousePlugin}\PYG{p}{(}\PYG{n}{IProductRepository}\PYG{+w}{ }\PYG{n}{repo}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{\PYGZus{}repo}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{repo}\PYG{p}{;}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{n+na}{[KernelFunction, Description(\PYGZdq{}Get the current stock quantity of a specific product\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GetStock}\PYG{p}{([}\PYG{n}{Description}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}The exact product name\PYGZdq{}}\PYG{p}{)]}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{name}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{product}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}repo}\PYG{p}{.}\PYG{n}{GetByNameAsync}\PYG{p}{(}\PYG{n}{name}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{product}\PYG{o}{?.}\PYG{n}{StockQuantity}\PYG{+w}{ }\PYG{o}{??}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{n+na}{[KernelFunction, Description(\PYGZdq{}List all products that have low stock (below 10)\PYGZdq{})]}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GetLowStockItems}\PYG{p}{()}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{items}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}repo}\PYG{p}{.}\PYG{n}{GetLowStockAsync}\PYG{p}{(}\PYG{n}{threshold}\PYG{p}{:}\PYG{+w}{ }\PYG{l+m+mi}{10}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{JsonSerializer}\PYG{p}{.}\PYG{n}{Serialize}\PYG{p}{(}\PYG{n}{items}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

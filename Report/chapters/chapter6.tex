@@ -1,0 +1,58 @@
+% =================================================================
+% CHAPTER 6: CONCLUSION AND FUTURE WORK
+% =================================================================
+\chapter{Conclusion and Future Work}
+\label{chap:conclusion}
+This final chapter summarizes the research contributions and outlines the roadmap for the future evolution of the "Warehouse Pro" system.
+
+% =================================================================
+% 6.1 KẾT LUẬN (NHỮNG GÌ ĐÃ LÀM ĐƯỢC)
+% =================================================================
+\section{Conclusion}
+This thesis successfully designed, implemented, and validated "Warehouse Pro," a modern inventory management ecosystem tailored for Small and Medium-sized Enterprises (SMEs). Moving beyond traditional CRUD applications, this project demonstrates how cutting-edge technologies—specifically **Generative AI** and **Real-time Communication**—can be practically applied to solve logistics challenges such as data fragmentation, manual entry errors, and communication delays.
+
+The key achievements of this research include:
+
+\begin{enumerate}
+    \item \textbf{Robust Software Architecture:} 
+    The system is built on a \textbf{Clean Architecture} foundation using **ASP.NET Core 8.0** and **ReactJS**. This separation of concerns ensures that the core business logic remains testable, maintainable, and independent of external frameworks.
+    
+    \item \textbf{Practical AI Integration (Semantic Kernel):} 
+    Unlike theoretical AI models, this project successfully implemented the **Function Calling** pattern. By orchestrating a **Local LLM (Llama 3.1)** via Semantic Kernel, the system empowers non-technical managers to interact with complex database records using natural language, ensuring 100\% data privacy.
+    
+    \item \textbf{Operational Automation:} 
+    The integration of **OCR (Tesseract.js)** for invoice scanning and **Smart Emailing (MailKit)** for automated notifications has significantly reduced manual data entry time and human error.
+    
+    \item \textbf{Seamless Real-time Collaboration:} 
+    By leveraging **SignalR**, the system eliminates the "information lag." The Internal Chat Module and Live Dashboard ensure that every stock movement is instantly synchronized across all devices, fostering a cohesive working environment.
+\end{enumerate}
+
+% =================================================================
+% 6.2 HƯỚNG PHÁT TRIỂN (FUTURE WORK)
+% =================================================================
+\section{Future Work}
+To transition "Warehouse Pro" from a functional prototype to a commercial-grade enterprise solution, the following enhancements are proposed:
+
+\subsection{1. Mobile Application Development (React Native)}
+Warehouse staff are mobile by nature. Developing a dedicated mobile application using **React Native** would allow:
+\begin{itemize}
+    \item \textbf{Camera-based Scanning:} Utilizing the smartphone camera to scan barcodes directly at the shelf, eliminating the need for laptops or dedicated handheld scanners.
+    \item \textbf{Push Notifications:} Alerting staff immediately via native mobile notifications when a new task or chat message arrives.
+\end{itemize}
+
+\subsection{2. Voice-Activated AI Operations}
+Integrating **OpenAI Whisper** (Speech-to-Text) would take the AI Assistant to the next level. Staff could perform "Hands-free Operations"—such as saying \textit{"Check stock for Samsung TV"} while carrying boxes—further streamlining workflow efficiency.
+
+\subsection{3. Hybrid AI Strategy}
+Currently, the system relies entirely on a Local LLM, which demands high hardware resources. A **Hybrid Strategy** could be implemented:
+\begin{itemize}
+    \item \textbf{Sensitive Data:} Continue using Local Llama 3 for querying internal inventory (Privacy prioritized).
+    \item \textbf{General Tasks:} Use Cloud APIs (e.g., GPT-4o mini) for drafting emails or summarizing generic documents to reduce the load on the local server.
+\end{itemize}
+
+\subsection{4. Scaling with Redis \& Microservices}
+As the user base grows, the monolithic architecture may face bottlenecks. Future work should involve:
+\begin{itemize}
+    \item Implementing **Redis Backplane** to scale SignalR across multiple server instances.
+    \item Breaking down the "Notification" and "AI Processing" modules into independent **Microservices** (using RabbitMQ) to ensure high availability and fault tolerance.
+\end{itemize}

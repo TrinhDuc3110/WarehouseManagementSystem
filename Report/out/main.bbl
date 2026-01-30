@@ -1,0 +1,114 @@
+\begin{thebibliography}{10}
+
+\bibitem{wms_history}
+K.~B. Ackerman.
+\newblock Practical handbook of warehousing.
+\newblock {\em Springer Science \& Business Media}, 2012.
+
+\bibitem{react_virtual_dom}
+A.~Aggarwal.
+\newblock Modern web development with react and redux.
+\newblock {\em International Journal of Computer Applications}, 2018.
+
+\bibitem{mlnet_study}
+R.~Ahmed and S.~Lin.
+\newblock Performance evaluation of ml.net for enterprise applications.
+\newblock In {\em IEEE International Conference on Big Data}, pages 150--158, 2021.
+
+\bibitem{sme_challenges}
+M.~Coteur and S.~Rieser.
+\newblock Warehouse management systems for small and medium-sized enterprises.
+\newblock {\em Logistics Journal}, 2021.
+
+\bibitem{ml_regression}
+S.~Draper and H.~Smith.
+\newblock Applied regression analysis.
+\newblock {\em John Wiley \& Sons}, 2014.
+
+\bibitem{wms_review}
+N.~Faber and M.~B.~M. De~Koster.
+\newblock Linking warehouse complexity to warehouse planning and control structure.
+\newblock {\em International Journal of Production Research}, 51(13):3819--3837, 2013.
+
+\bibitem{paper1}
+A.~Gunasekaran and E.~Ngai.
+\newblock Virtual supply-chain management.
+\newblock {\em Production and Operations Management}, 13(3):279--292, 2004.
+
+\bibitem{ocr_thesis}
+P.~Gupta.
+\newblock Optical character recognition for invoice processing using deep learning.
+\newblock Master's thesis, Technical University of Munich, 2019.
+
+\bibitem{rfc7519}
+M.~Jones, J.~Bradley, and N.~Sakimura.
+\newblock Json web token (jwt), 2015.
+
+\bibitem{sap_manual}
+M.~Kannan and J.~P. Kannan.
+\newblock {\em SAP Extended Warehouse Management: Functions and Configuration}, 2022.
+
+\bibitem{dotnet_performance}
+Konrad Kokosa.
+\newblock {\em Pro .NET Memory Management}.
+\newblock Apress, 2018.
+
+\bibitem{dotnet8}
+Andrew Lock.
+\newblock {\em ASP.NET Core in Action, Third Edition}.
+\newblock Manning, 2023.
+
+\bibitem{clean_arch}
+Robert~C. Martin.
+\newblock {\em Clean Architecture: A Craftsman's Guide to Software Structure and Design}.
+\newblock Prentice Hall, 2017.
+
+\bibitem{signalr}
+Microsoft.
+\newblock Real-time asp.net with signalr, 2023.
+\newblock [Accessed: 10-Dec-2025].
+
+\bibitem{odoo_book}
+G.~Moss.
+\newblock {\em Working with Odoo 16}.
+\newblock Packt Publishing, 2023.
+
+\bibitem{odoo_doc}
+Odoo S.A.
+\newblock {\em Odoo Inventory Management Documentation}, 2024.
+
+\bibitem{excel_errors}
+R.~Panko.
+\newblock What we know about spreadsheet errors.
+\newblock {\em Journal of End User Computing}, 1998.
+
+\bibitem{websockets_study}
+V.~Pimentel and B.~G. Nickerson.
+\newblock Communicating with the internet of things using websockets.
+\newblock {\em IEEE International Conference on Pervasive Computing and Communications}, pages 180--186, 2012.
+
+\bibitem{react_docs}
+Meta Platforms.
+\newblock React documentation - the library for web and native user interfaces, 2024.
+\newblock [Accessed: 12-Dec-2025].
+
+\bibitem{sap_ewm}
+SAP SE.
+\newblock {\em SAP Extended Warehouse Management (SAP EWM) - Technical Overview}, 2023.
+
+\bibitem{ef_core}
+Jon~P. Smith.
+\newblock {\em Entity Framework Core in Action, Second Edition}.
+\newblock Manning, 2021.
+
+\bibitem{tesseract_ocr}
+R.~Smith.
+\newblock An overview of the tesseract ocr engine.
+\newblock {\em Ninth International Conference on Document Analysis and Recognition (ICDAR)}, 2007.
+
+\bibitem{industry40}
+F.~Zezulka, P.~Marcon, I.~Vesely, and O.~Sajdl.
+\newblock Industry 4.0 – an introduction in the phenomenon.
+\newblock {\em IFAC-PapersOnLine}, 49(25):8--12, 2016.
+
+\end{thebibliography}

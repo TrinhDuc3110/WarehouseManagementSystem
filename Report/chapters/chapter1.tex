@@ -1,0 +1,141 @@
+\chapter{Introduction}
+
+% --- 1.1 BACKGROUND ---
+\section{Background}
+We live in an era where technology is changing everything, from how we order food to how we manage our businesses. However, in my personal observation, while large supermarkets have advanced systems, many small and medium-sized enterprises (SMEs) in Vietnam are still "stuck in the past."
+
+I interned at a company that provides business software, and many businesses still use Excel for management. Although it's free, as businesses grow, it becomes increasingly difficult.
+
+I realized that manual management leads to many inefficiencies. Warehouse managers count goods on paper, then pass that paper to the accountant to enter into the computer. This delay causes data synchronization problems—what appears on the screen rarely matches what's on the shelves. Driven by these real-world challenges and a desire to apply the full-stack development skills I learned in university (specifically **.NET** and **ReactJS**),
+
+I chose the topic for this thesis as "Building a Warehouse Management System with QR Code and Artificial Intelligence Integration - Warehouse Pro". My goal is simple: to build a tool that makes the work of warehouse managers easier, faster, and smarter.
+
+% --- 1.2 PROBLEM STATEMENT ---
+\section{Problem Statement}
+Before writing any code, I analyzed why current methods fail. I identified four specific "pain points" that shop owners face daily:
+
+\subsection{The "Ghost Stock" Phenomenon}
+This is the most frustrating problem. "Ghost Stock" happens when the software says there are 5 items left, but the shelf is actually empty. This usually occurs because someone forgot to write down a sale or made a typo in Excel. The consequence is severe: sales staff might accept an order from a VIP customer, only to realize later that the warehouse cannot fulfill it.
+
+\subsection{Forecasting is a Guessing Game}
+Traditional software only tells the owner \textit{"what happened yesterday"}. It rarely suggests \textit{"what to do tomorrow"}. Without data analysis, importing goods becomes a guessing game based on intuition.
+\begin{itemize}
+    \item If they guess wrong and import too much, capital is buried in "dead stock."
+    \item If they guess wrong and import too little, they lose revenue on "hot" items.
+\end{itemize}
+
+\subsection{Data Entry is Boring and Error-Prone}
+I noticed that processing purchase invoices is extremely time-consuming. Staff have to look at a paper invoice and manually type every product name and price into the system. This repetitive task is not only boring but also leads to "fat-finger" errors (e.g., typing \$100 instead of \$10), which ruins financial reports.
+
+\subsection{Disconnected Systems (Data Silos)}
+In many companies, the warehouse data lives in Excel, while debt and cash flow live in a separate accounting book. These two systems do not talk to each other. Because of this, it's very hard to figure out the precise Cost of Goods Sold (COGS) or see a customer's current debt limit in real time.
+
+% --- 1.3 SCOPE AND OBJECTIVES ---
+\section{Scope and Objectives}
+
+\subsection{Project Objectives}
+This thesis aims to bridge the gap between traditional warehouse management and modern digital transformation for SMEs. The specific objectives are defined as follows:
+\begin{itemize}
+    \item \textbf{Digitize Operations:} Transition from manual, paper-based tracking to a centralized web-based platform that records every import and export transaction digitally.
+    \item \textbf{Automate Data Entry:} Implement OCR (Optical Character Recognition) technology to automatically parse and extract data from invoices, minimizing human error and processing time.
+    \item \textbf{Intelligent Interaction:} Integrate an \textbf{AI Assistant} powered by Large Language Models to allow users to query inventory status, generate reports, and execute system commands using natural language.
+    \item \textbf{Enhance Communication:} Develop a real-time ecosystem featuring \textbf{Internal Chat Rooms} for staff coordination and an \textbf{Automated Mailing System} that sends professional notifications and invoices to partners based on transaction triggers.
+    \item \textbf{Real-time Visibility:} Provide a dynamic Dashboard utilizing \textbf{SignalR} for instant data synchronization, ensuring that inventory levels are updated across all clients the moment a transaction is finalized.
+\end{itemize}
+
+\subsection{Technologies Used}
+The system is built on a modern, robust tech stack designed for scalability, security, and high performance.
+
+\subsubsection{Technical Stack}
+\begin{itemize}
+    \item \textbf{Backend: ASP.NET Core 8.0 (Web API)} \\
+    Utilizing the latest LTS version of .NET to ensure high performance, type safety, and seamless integration with modern libraries.
+    
+    \item \textbf{Frontend: ReactJS + Ant Design} \\
+    Developing a high-speed Single Page Application (SPA) with a professional user interface provided by the Ant Design framework.
+    
+    \item \textbf{Database: SQL Server + Entity Framework Core} \\
+    Employing a "Code First" approach for efficient database schema management and optimized data querying.
+    
+    \item \textbf{Advanced Integrations:}
+    \begin{itemize}
+        \item \textbf{Semantic Kernel + Ollama (Llama 3.1):} Orchestrating the Generative AI capabilities for natural language processing and intelligent task automation.
+        \item \textbf{SignalR:} Enabling bi-directional, real-time communication for both the Live Dashboard and the Internal Chat Room.
+        \item \textbf{MailKit \& FluentEmail:} A dedicated mailing engine for handling SMTP services, allowing the system to send automated, template-based emails.
+        \item \textbf{Tesseract.js:} A client-side or server-side library for high-accuracy OCR scanning of invoice documents.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Key Modules}
+The \textbf{Warehouse Pro} system is organized into five core functional modules:
+\begin{enumerate}
+    \item \textbf{Inventory Core:} Comprehensive management of products, categories, units, and real-time stock tracking.
+    \item \textbf{Transaction Hub:} Manages inbound and outbound flows with strict validation rules and automatic email notification triggers to suppliers or customers.
+    \item \textbf{Communication Center:} 
+    \begin{itemize}
+        \item \textbf{AI Chatbot Assistant:} Provides a conversational interface for data lookups and administrative assistance.
+        \item \textbf{Internal Chat Room:} A SignalR-powered module for instant messaging between warehouse employees.
+    \end{itemize}
+    \item \textbf{Smart Notification \& Mailing:} A centralized system for managing professional email templates (Invoices, Low Stock Alerts) and automating their delivery based on system events.
+    \item \textbf{Reporting \& Analytics:} Generates visual insights into business performance, manages partner debts, and exports detailed data for auditing purposes.
+\end{enumerate}
+
+% --- 1.4 ASSUMPTION AND PROPOSED SOLUTION ---
+\section{Assumption and Solution Strategy}
+
+\subsection{Project Assumptions}
+To ensure the feasibility of this graduation project within the specified timeframe, several assumptions have been made:
+\begin{itemize}
+    \item \textbf{Connectivity:} It is assumed that end users (warehouse staff and managers) have a stable internet connection to maintain real-time synchronization via SignalR.
+    \item \textbf{Data Availability:} Due to the difficulty of accessing sensitive commercial data, a synthetic dataset reflecting realistic warehouse operations and sale trends will be generated. This data is used to verify the AI Assistant's ability to interpret and summarize inventory contexts.
+    \item \textbf{Hardware:} The system assumes that client devices (PCs or Tablets) are equipped with standard camera hardware or scanners for the OCR module to function effectively.
+\end{itemize}
+
+\subsection{Proposed Solution Strategy}
+The development follows a \textbf{Modular Monolith Architecture}. Although microservices architecture offers high scalability, a modular monolith architecture was strategically chosen for this project to minimize deployment complexity and operational costs throughout the development lifecycle, handled by a single developer, while still ensuring high maintainability and clear functional separation.
+
+
+The operational workflow is designed as a seamless, automated pipeline:
+\begin{enumerate}
+    \item \textbf{Data Capture:} Staff members initiate transactions either through manual entry or by utilizing the OCR engine to scan physical invoices, which automatically populates the digital forms.
+    \item \textbf{Intelligent Processing:} The \textbf{AI Assistant} monitors the input for potential anomalies and provides natural language support for quick data lookups during the transaction process.
+    \item \textbf{Business Logic Validation:} The ASP.NET Core API validates the transaction against strict business rules (e.g., stock availability, partner credit limits, and data integrity).
+    \item \textbf{Atomic Persistence:} The system updates the SQL Server database in a single transaction, ensuring that inventory levels, financial debts, and transaction logs are synchronized without discrepancies.
+    \item \textbf{Instant Communication:} 
+    \begin{itemize}
+        \item \textbf{SignalR} broadcasts real-time updates to the Manager's dashboard and updates the internal chat status.
+        \item The \textbf{Smart Mailing} module automatically generates and dispatches an electronic invoice or notification to the respective partner.
+    \end{itemize}
+\end{enumerate}
+
+% --- 1.5 STRUCTURE OF THESIS ---
+\section{Thesis Structure}
+The roadmap of this report is organized into six chapters as follows:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.25\textwidth]{images/structure.png}
+    \caption{Overview of the Thesis Structure}
+    \label{fig:thesis_structure}
+\end{figure}
+
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction} \\
+    This chapter outlines why I chose this topic and what I aim to achieve.
+    
+    \item \textbf{Chapter 2: Literature Review} \\
+    I research existing WMS solutions (like Odoo, SAP) to see what they lack, and provide the theoretical background for the technologies (React, .NET, ML algorithms) I am using.
+    
+    \item \textbf{Chapter 3: Methodology \& System Design} \\
+    The project's "blueprint."  I show the System Architecture, the ERD (Database Design), and the order in which important elements work.
+    
+    \item \textbf{Chapter 4: Implementation} \\
+    The "Building" stage.  I talk about how I arranged the code, solved technical problems, and show you the final UI.
+    
+    \item \textbf{Chapter 5: Evaluation} \\
+    Testing the system.  I check the AI model's performance and see whether it's accurate enough to utilize.
+    
+    \item \textbf{Chapter 6: Conclusion} \\
+    A summary of my experience, a list of the honest limits of the present version, and my plans for making things better in the future.
+\end{itemize}

@@ -1,0 +1,28 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Overview of the Thesis Structure}}{6}{figure.caption.8}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Standard Workflow of a Warehouse Operation}}{10}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Layered Architecture in ASP.NET Core}}{13}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The Layered Structure of Warehouse Pro (Clean Architecture)}}{19}{figure.caption.15}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Docker Compose Deployment Architecture}}{20}{figure.caption.19}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces General Use Case Diagram of Warehouse Pro}}{22}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces UI Mockup for Login Screen}}{24}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces UI Mockup for Create Import Ticket Screen}}{26}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces UI Mockup for AI Assistant Interaction}}{28}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces UI Mockup for Internal Chat Widget}}{29}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces UI Mockup for The Main Dashboard}}{30}{figure.caption.36}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Entity-Relationship Diagram (ERD) generated from Domain Entities}}{31}{figure.caption.37}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Class Diagram illustrating the 3-Tier Architecture Flow}}{36}{figure.caption.49}%
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Sequence Diagram for Import Process with Email Trigger}}{38}{figure.caption.50}%
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Sequence Diagram for AI Function Calling Flow}}{39}{figure.caption.51}%
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Sequence Diagram for SignalR Chat Flow}}{40}{figure.caption.52}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Visual Studio Solution Structure organized by Layers}}{44}{figure.caption.55}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Implemented Login Screen}}{49}{figure.caption.56}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces The Management Dashboard}}{50}{figure.caption.57}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Import Interface with OCR Scanning Button}}{51}{figure.caption.58}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces AI Assistant answering inventory questions}}{52}{figure.caption.59}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Real-time Internal Chat Widget}}{52}{figure.caption.60}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

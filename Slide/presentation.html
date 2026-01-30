@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graduation Defense - Warehouse Pro</title>
+    <style>
+        /* --- CẤU HÌNH GIAO DIỆN PRO --- */
+        :root {
+            --bg-color: #0f172a;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #38bdf8;
+            --accent-warm: #fbbf24;
+            --card-bg: rgba(30, 41, 59, 0.85);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.1) 0px, transparent 50%);
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 45% 55%; /* Tăng diện tích cho phần chữ */
+            gap: 60px;
+            width: 100%;
+            height: 90%;
+            max-width: 1900px;
+        }
+
+        .full-layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- TYPOGRAPHY UPGRADE --- */
+        h1 {
+            font-size: 7.5rem; /* Tăng từ 5.5 */
+            line-height: 1.1;
+            margin-bottom: 30px;
+            color: var(--accent);
+            text-shadow: 0 0 50px rgba(56, 189, 248, 0.5);
+        }
+
+        h2 {
+            font-size: 4.5rem; /* Tăng từ 3.5 */
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            border-left: 15px solid var(--accent-warm);
+            padding-left: 40px;
+            font-weight: 800;
+        }
+
+        h3 {
+            font-size: 2.8rem; /* Tăng từ 2.2 */
+            color: var(--accent);
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        p, li {
+            font-size: 2.2rem; /* Tăng từ 1.8 - Rất dễ đọc */
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        ul {
+            padding-left: 50px;
+        }
+
+        li::marker {
+            color: var(--accent-warm);
+            font-size: 1.3em;
+        }
+
+        strong {
+            color: white;
+            font-weight: 800;
+        }
+
+        .highlight {
+            color: var(--accent-warm);
+            font-weight: bold;
+        }
+
+        .tech-reason {
+            font-size: 1.7rem; /* Tăng từ 1.4 */
+            color: var(--text-secondary);
+            font-style: italic;
+            display: block;
+            margin-top: 10px;
+            border-left: 4px solid #555;
+            padding-left: 20px;
+        }
+
+        /* IMAGE BOX */
+        .img-box {
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+        }
+
+        /* BADGES */
+        .badge {
+            background: rgba(56, 189, 248, 0.15);
+            border: 3px solid var(--accent);
+            color: var(--accent);
+            padding: 20px 50px;
+            border-radius: 60px;
+            font-size: 2.2rem; /* Chữ to rõ trong Badge */
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .badge.ai {
+            border-color: #ef4444;
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        /* NAVIGATION */
+        .nav-btn {
+            position: absolute;
+            bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 20px 40px;
+            font-size: 2rem;
+            border-radius: 15px;
+            z-index: 100;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover { background: var(--accent); color: #000; }
+        .prev { right: 180px; }
+        .next { right: 50px; }
+        .page-num {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .fs-btn {
+            margin-top: 50px;
+            padding: 25px 60px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            border-radius: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slide-container">
+        <div class="page-num" id="page-indicator">01 / 15</div>
+        <button class="nav-btn prev" onclick="moveSlide(-1)">❮ Prev</button>
+        <button class="nav-btn next" onclick="moveSlide(1)">Next ❯</button>
+
+        <div class="slide active">
+            <div class="full-layout">
+                <h3 style="letter-spacing: 8px;">GRADUATION THESIS DEFENSE</h3>
+                <h1>WAREHOUSE PRO</h1>
+                <h2 style="border: none; color: white;">Intelligent Management System with AI & QR</h2>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 50px 100px; border-radius: 30px; display: flex; gap: 120px; margin-top: 40px; text-align: left; border: 1px solid rgba(255,255,255,0.1);">
+                    <div>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 1.6rem;">STUDENT</p>
+                        <p style="margin: 0; font-size: 3.5rem; font-weight: 900; color: var(--accent);">TRINH VAN DUC</p>
+                        <p style="margin: 0; font-size: 2.2rem;">ITITIU21182</p>
+                    </div>
+                    <div style="border-left: 3px solid #555; padding-left: 100px;">
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 1.6rem;">INSTRUCTOR</p>
+                        <p style="margin: 0; font-size: 3.5rem; font-weight: 900;">Mr. LE THANH SON</p>
+                        <p style="margin: 0; font-size: 2.2rem;">International University</p>
+                    </div>
+                </div>
+                <button class="fs-btn" onclick="toggleFullScreen()">⛶ START PRESENTATION</button>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Current Pain Points</h2>
+                    <ul>
+                        <li><strong>Ghost Stock 👻</strong>
+                            <span class="tech-reason">Problem: System data &ne; Physical stock.</span>
+                        </li>
+                        <li><strong>Guessing Game 🎲</strong>
+                            <span class="tech-reason">No forecasting data -> Dead Stock.</span>
+                        </li>
+                        <li><strong>Manual Entry ✍️</strong>
+                            <span class="tech-reason">Typing invoices leads to human errors.</span>
+                        </li>
+                        <li><strong>Data Silos 🧱</strong>
+                            <span class="tech-reason">Warehouse & Accounting are disconnected.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="img-box" style="background: transparent; border: none; box-shadow: none;">
+                    <div style="font-size: 25rem; text-align: center;">📉 ❌ 🤯</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Project Goals</h2>
+                    <ul>
+                        <li><strong class="highlight">Digitize:</strong> Paper/Excel &rarr; Web App.</li>
+                        <li><strong class="highlight">Automate:</strong> Typing &rarr; Barcode Scan.</li>
+                        <li><strong class="highlight">Forecast:</strong> Intuition &rarr; AI Prediction.</li>
+                        <li><strong class="highlight">Real-time:</strong> Delay &rarr; Instant Sync.</li>
+                    </ul>
+                </div>
+                <div class="img-box" style="background: transparent; border: none; box-shadow: none;">
+                    <div style="font-size: 25rem; text-align: center;">🚀 🤖</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout">
+                <h2>Technology Stack</h2>
+                <div class="badge-container" style="max-width: 1600px; margin-bottom: 80px; gap: 30px;">
+                    <div class="badge">Backend: .NET Core 8.0 🚀</div>
+                    <div class="badge">Frontend: ReactJS ⚛️</div>
+                    <div class="badge">DB: SQL Server 🗄️</div>
+                    <div class="badge">UI: Ant Design 🎨</div>
+                </div>
+                <div class="badge-container" style="gap: 30px;">
+                    <div class="badge ai">ML.NET (AI Engine) 🧠</div>
+                    <div class="badge ai">SignalR (Real-time) ⚡</div>
+                    <div class="badge ai">Docker 🐳</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Clean Architecture</h2>
+                    <ul>
+                        <li><strong>Domain:</strong> Core Entities.</li>
+                        <li><strong>Application:</strong> Business Logic Interfaces.</li>
+                        <li><strong>Infrastructure:</strong> Database & External Services.</li>
+                        <li><strong>API:</strong> Entry points & Controllers.</li>
+                    </ul>
+                    <p class="highlight">Ensures maintainability and testability.</p>
+                </div>
+                <div class="img-box">
+                    <img src="architecture.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: architecture.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout">
+                <h2 style="margin-bottom: 20px;">Database Design (ERD)</h2>
+                <div class="img-box" style="width: 98%; height: 85%; background: white; border-radius: 20px;">
+                    <img src="erd_full.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:black\'>MISSING: erd_full.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>AI Logic Flow</h2>
+                    <ol>
+                        <li>Fetch 6-month historical data.</li>
+                        <li>Process into <strong>ML.NET Engine</strong>.</li>
+                        <li>Apply <strong>Regression Algorithm</strong>.</li>
+                        <li>Generate Predicted Quantity.</li>
+                    </ol>
+                    <p class="highlight">Optimized Latency: 1.4s.</p>
+                </div>
+                <div class="img-box">
+                    <img src="ai_sequence.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: ai_sequence.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout" style="justify-content: flex-start; padding-top: 20px;">
+                <h2 style="margin-bottom: 50px;">Strict Workflow: Chat-to-Action</h2>
+                <div style="display: grid; grid-template-columns: 1fr 50px 1fr 50px 1fr; width: 100%; max-width: 1800px; align-items: center; gap: 30px;">
+                    <div class="step-container">
+                        <div class="img-box" style="height: 500px;"><img src="chat_request.png"></div>
+                        <h3 style="margin-top:30px; color: var(--accent-warm);">1. Staff Request</h3>
+                        <p style="font-size: 1.6rem;">Request via ChatGroup.</p>
+                    </div>
+                    <div style="font-size: 5rem; color: var(--accent);">➜</div>
+                    <div class="step-container">
+                        <div class="img-box" style="height: 500px;"><img src="admin_import.png"></div>
+                        <h3 style="margin-top:30px; color: var(--accent-warm);">2. Admin Approval</h3>
+                        <p style="font-size: 1.6rem;">Admin verification & creation.</p>
+                    </div>
+                    <div style="font-size: 5rem; color: var(--accent);">➜</div>
+                    <div class="step-container">
+                        <div class="img-box" style="height: 500px;"><img src="QRscan.png"></div>
+                        <h3 style="margin-top:30px; color: var(--accent-warm);">3. QR Verification</h3>
+                        <p style="font-size: 1.6rem;">Scanning for physical accuracy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout">
+                <h2>AI Forecasting Results</h2>
+                <div class="img-box" style="width: 95%; height: 80%;">
+                    <img src="forecast_ui.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: forecast_ui.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Real-time Communication</h2>
+                    <ul>
+                        <li>Powered by <strong>SignalR</strong>.</li>
+                        <li>Contextual Chat Rooms.</li>
+                        <li>Zero-latency updates.</li>
+                    </ul>
+                    <p class="highlight">Seamless staff collaboration.</p>
+                </div>
+                <div class="img-box">
+                    <img src="chat_ui.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: chat_ui.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Automated Email Alerts</h2>
+                    <ul>
+                        <li><strong>Low Stock Trigger:</strong> Automated check.</li>
+                        <li><strong>Background Service:</strong> SmtpClient integration.</li>
+                        <li><strong>Admin Preference:</strong> Toggleable alerts.</li>
+                    </ul>
+                    <p class="highlight">Proactive inventory management.</p>
+                </div>
+                <div class="img-box">
+                    <img src="email_alert.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: email_alert.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h2>Deployment Strategy</h2>
+                    <ul>
+                        <li><strong>Dockerized Containers:</strong> Nginx, .NET, SQL.</li>
+                        <li>"Write once, run anywhere."</li>
+                        <li>Scalable infrastructure.</li>
+                    </ul>
+                </div>
+                <div class="img-box">
+                    <img src="docker_arch.png" onerror="this.parentNode.innerHTML='<h2 style=\'color:white\'>MISSING: docker_arch.png</h2>'">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="grid-layout">
+                <div style="border-right: 4px solid #555; padding-right: 50px;">
+                    <h2 style="border-left: 15px solid #10b981;">Achievements ✅</h2>
+                    <ul>
+                        <li>Full-stack System (.NET 8).</li>
+                        <li>Deep AI Integration.</li>
+                        <li>Real-time Workflow.</li>
+                    </ul>
+                </div>
+                <div style="padding-left: 50px;">
+                    <h2 style="border-left: 15px solid #ef4444;">Future Work 🚧</h2>
+                    <ul>
+                        <li>Mobile Application.</li>
+                        <li>IoT Sensor Integration.</li>
+                        <li>Blockchain Tracking.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout">
+                <h2>References & Sources</h2>
+                <div class="grid-layout" style="grid-template-columns: 1fr 1fr; text-align: left;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: 30px;">
+                        <h3 style="color: var(--accent-warm);">Frameworks</h3>
+                        <ul style="font-size: 1.8rem;">
+                            <li>Microsoft .NET 8 Documentation.</li>
+                            <li>ML.NET Regression Guide.</li>
+                            <li>SignalR WebSocket Standards.</li>
+                            <li>Clean Architecture Principles.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: 30px;">
+                        <h3 style="color: var(--accent-warm);">Internal Logic</h3>
+                        <ul style="font-size: 1.8rem;">
+                            <li>Entities: Product, Transaction, User.</li>
+                            <li>Services: Prediction, Chat Hub.</li>
+                            <li>Security: AuditLog, JWT.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="full-layout">
+                <h1 style="font-size: 12rem;">THANK YOU!</h1>
+                <h2 style="border: none; color: var(--accent); font-size: 5rem;">Q & A Session</h2>
+                <div style="margin-top: 80px; display: flex; gap: 80px; justify-content: center;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 6rem;">📧</div>
+                        <p style="font-size: 2.2rem;">ititiu21182@student.hcmiu.edu.vn</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 6rem;">🐙</div>
+                        <p style="font-size: 2.2rem;">github.com/trinhvanduc</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const pageNum = document.getElementById('page-indicator');
+
+        function updateSlide() {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            pageNum.innerText = `${String(currentSlide + 1).padStart(2, '0')} / ${slides.length}`;
+        }
+
+        function moveSlide(n) {
+            currentSlide = (currentSlide + n + slides.length) % slides.length;
+            updateSlide();
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter") moveSlide(1);
+            if (e.key === "ArrowLeft") moveSlide(-1);
+            if (e.key.toLowerCase() === "f") toggleFullScreen();
+        });
+
+        updateSlide();
+    </script>
+</body>
+
+</html>

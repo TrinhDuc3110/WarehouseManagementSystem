@@ -1,0 +1,24 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Infrastructure/Services/AIAssistantService.cs}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{string}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{ChatAsync}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{userPrompt}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// Connect to Local LLM}
+\PYG{+w}{    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{builder}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Kernel}\PYG{p}{.}\PYG{n}{CreateBuilder}\PYG{p}{();}
+\PYG{+w}{    }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{AddOpenAIChatCompletion}\PYG{p}{(}
+\PYG{+w}{        }\PYG{n}{modelId}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}llama3.1\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{        }\PYG{n}{apiKey}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}ollama\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{        }\PYG{n}{endpoint}\PYG{p}{:}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Uri}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}http://localhost:11434/v1\PYGZdq{}}\PYG{p}{));}\PYG{+w}{ }\PYG{c+c1}{// Localhost Ollama}
+
+\PYG{+w}{    }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Plugins}\PYG{p}{.}\PYG{n}{AddFromType}\PYG{o}{\PYGZlt{}}\PYG{n}{WarehousePlugin}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{+w}{    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{kernel}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Build}\PYG{p}{();}
+
+\PYG{+w}{    }\PYG{c+c1}{// Enable Auto\PYGZhy{}Function Calling}
+\PYG{+w}{    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{settings}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{OpenAIPromptExecutionSettings}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{ToolCallBehavior}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ToolCallBehavior}\PYG{p}{.}\PYG{n}{AutoInvokeKernelFunctions}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{    }\PYG{c+c1}{// Execute}
+\PYG{+w}{    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{result}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{kernel}\PYG{p}{.}\PYG{n}{InvokePromptAsync}\PYG{p}{(}\PYG{n}{userPrompt}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{new}\PYG{p}{(}\PYG{n}{settings}\PYG{p}{));}
+\PYG{+w}{    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{result}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

@@ -1,0 +1,21 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Infrastructure/Services/EmailService.cs}
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{+w}{ }\PYG{n+nf}{SendInvoiceEmailAsync}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Transaction}\PYG{+w}{ }\PYG{n}{ticket}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{email}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{MimeMessage}\PYG{p}{();}
+\PYG{+w}{    }\PYG{n}{email}\PYG{p}{.}\PYG{n}{From}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{MailboxAddress}\PYG{p}{.}\PYG{n}{Parse}\PYG{p}{(}\PYG{n}{\PYGZus{}settings}\PYG{p}{.}\PYG{n}{SenderEmail}\PYG{p}{));}
+\PYG{+w}{    }\PYG{n}{email}\PYG{p}{.}\PYG{n}{To}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{MailboxAddress}\PYG{p}{.}\PYG{n}{Parse}\PYG{p}{(}\PYG{n}{toEmail}\PYG{p}{));}
+\PYG{+w}{    }\PYG{n}{email}\PYG{p}{.}\PYG{n}{Subject}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Invoice \PYGZsh{}\PYGZob{}ticket.Id\PYGZcb{} \PYGZhy{} Warehouse Pro\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{c+c1}{// Load HTML Template and replace placeholders}
+\PYG{+w}{    }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{body}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{File}\PYG{p}{.}\PYG{n}{ReadAllTextAsync}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Templates/InvoiceTemplate.html\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{    }\PYG{n}{body}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{body}\PYG{p}{.}\PYG{n}{Replace}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZob{}\PYGZob{}CustomerName\PYGZcb{}\PYGZcb{}\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ticket}\PYG{p}{.}\PYG{n}{PartnerName}\PYG{p}{)}
+\PYG{+w}{               }\PYG{p}{.}\PYG{n}{Replace}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZob{}\PYGZob{}TotalAmount\PYGZcb{}\PYGZcb{}\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ticket}\PYG{p}{.}\PYG{n}{TotalAmount}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}C\PYGZdq{}}\PYG{p}{));}
+
+\PYG{+w}{    }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{var}\PYG{+w}{ }\PYG{n}{smtp}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{SmtpClient}\PYG{p}{();}
+\PYG{+w}{    }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{smtp}\PYG{p}{.}\PYG{n}{ConnectAsync}\PYG{p}{(}\PYG{n}{\PYGZus{}settings}\PYG{p}{.}\PYG{n}{SmtpServer}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{587}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{SecureSocketOptions}\PYG{p}{.}\PYG{n}{StartTls}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{smtp}\PYG{p}{.}\PYG{n}{AuthenticateAsync}\PYG{p}{(}\PYG{n}{\PYGZus{}settings}\PYG{p}{.}\PYG{n}{Username}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{\PYGZus{}settings}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{smtp}\PYG{p}{.}\PYG{n}{SendAsync}\PYG{p}{(}\PYG{n}{email}\PYG{p}{);}
+\PYG{+w}{    }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{smtp}\PYG{p}{.}\PYG{n}{DisconnectAsync}\PYG{p}{(}\PYG{k}{true}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{MintedVerbatim}

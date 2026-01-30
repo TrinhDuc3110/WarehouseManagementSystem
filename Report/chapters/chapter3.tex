@@ -1,0 +1,566 @@
+\chapter{Methodology and System Design}
+\label{chap:methodology}
+
+% Giới thiệu chương
+Building upon the theoretical foundation and technology stack discussed in Chapter 2, this chapter focuses on the practical design and implementation of the "Warehouse Pro" system. Here, I will present the overall system architecture, the specific functional requirements I have identified, and the database schema. Additionally, I will explain how the AI and algorithm modules are integrated into the application flow to solve the problems defined earlier.
+
+
+% =================================================================
+% 3.1 TỔNG QUAN & KIẾN TRÚC (SYSTEM OVERVIEW)
+% =================================================================
+\section{System Overview and Architecture}
+In this section, I delineate the structural design of "Warehouse Pro".  My objective was to develop a system that is both operationally effective and scalable, while also being straightforward to maintain in the future.  Therefore, I opted to separate the frontend and backend components, adopting a "Headless Architecture" approach.
+
+\subsection{Architectural Pattern (Clean Architecture)}
+For the Backend API, I opted against the conventional N-Tier architecture due to its tendency to result in tightly coupled components.  Instead, I implemented **Clean Architecture** (Onion Architecture).  By adhering to the **Dependency Rule** (dependencies only point inward), I guaranteed that my essential business logic remains decoupled from external frameworks or databases.  I structured the codebase into four separate layers:
+
+\subsubsection{1. Domain Layer (The Core)}
+I regarded this layer as the core of the application.  It embodies the fundamental principles of the enterprise.
+\begin{itemize}
+    \item \textbf{What I included:} This is the section where I defined my fundamental Entities (e.g., `Product`, `Order`) and Enums.
+    \item \textbf{Why it matters:} I maintained this layer as entirely independent (Zero Dependencies). This ensures that alterations to the user interface or database migration in the future will not compromise my fundamental business principles.
+\end{itemize}
+
+\subsubsection{2. Application Layer}
+This layer functions as the central controller that coordinates the logic.  It delineates the capabilities of the system.
+\begin{itemize}
+    \item \textbf{What I included:} I placed my Interfaces (e.g., `IProductRepository`), DTOs, and Services here.
+    \item \textbf{Role:} It takes data from the Core and processes it according to specific use cases before sending it out. It depends only on the Domain Layer.
+\end{itemize}
+
+\subsubsection{3. Infrastructure Layer}
+I used this layer to handle all "dirty work" related to external communications.
+\begin{itemize}
+    \item \textbf{What I included:} This is where I implemented the database logic using **EF Core** (`AppDbContext`) and other services like Email or File Storage.
+    \item \textbf{Role:} It acts as a plugin to the Application layer. The database connection string and SQL logic live here, keeping the other layers clean.
+\end{itemize}
+
+\subsubsection{4. Presentation Layer (API)}
+This is the entry point where the outside world interacts with my system.
+\begin{itemize}
+    \item \textbf{What I included:} My RESTful Controllers and Middleware configuration (`Program.cs`).
+    \item \textbf{Role:} Its only job is to receive HTTP requests, convert them into DTOs, and pass them to the Application layer. It doesn't contain any business logic itself.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/sys_arch.png}
+    \caption{The Layered Structure of Warehouse Pro (Clean Architecture)}
+    \label{fig:sys_arch}
+\end{figure}
+
+\subsection{Deployment Strategy (Dockerization)}
+One of the most significant challenges in software development is the "it works on my machine" issue.  To address this issue and guarantee consistent operation of the application across various environments, I implemented containerization of the entire system utilizing **Docker**.
+
+The deployment is managed through Docker Compose, comprising three interconnected services:
+
+\subsubsection{Container 1: Client Service (Frontend)}
+\begin{itemize}
+    \item \textbf{Setup:} I utilized `node:18-alpine` during the build process and `nginx:alpine` for production deployment.
+    \item \textbf{Function:} This container accommodates the static files of ReactJS.  I configured Nginx to function as a reverse proxy, effectively directing API requests to the Backend container while delivering the UI to users.
+\end{itemize}
+
+\subsubsection{Container 2: API Service (Backend)}
+\begin{itemize}
+    \item \textbf{Setup:} Based on the `dotnet/aspnet:8.0` image.
+    \item \textbf{Function:} This container hosts the compiled .NET 8 Web API. I exposed port 8080 internally to enable communication with the frontend within the Docker network.
+\end{itemize}
+
+\subsubsection{Container 3: Database Service}
+\begin{itemize}
+    \item \textbf{Setup:} I used the official `mssql/server:2019` image.
+    \item \textbf{Function:} This manages data retention and storage.  To avoid data loss during container restarts, I explicitly mounted a **Docker Volume** to securely hold the database files.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/deploy_diagram.png}
+    \caption{Docker Compose Deployment Architecture}
+    \label{fig:deploy_diagram}
+\end{figure}
+
+
+% =================================================================
+% 3.2 PHÂN TÍCH YÊU CẦU (FUNCTIONAL REQUIREMENTS)
+% =================================================================
+\section{Functional Requirements Analysis}
+Before commencing the implementation phase, a rigorous analysis of the warehouse workflow was conducted to define the functional scope of "Warehouse Pro". The objective was to ensure the system addresses the specific operational needs of distinct user groups while integrating advanced features like AI assistance and real-time communication without inducing unnecessary complexity.
+
+\subsection{System Actors}
+Adhering to the standard logistics hierarchy and the Principle of Least Privilege, consumers of the system are categorized into three primary actors. This categorization forms the foundation for the Role-Based Access Control (RBAC) security framework.
+
+The responsibilities of each actor are detailed in Table \ref{tab:actors}.
+
+\begin{table}[H]
+\centering
+\caption{System Actors and Responsibilities}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Actor} & \textbf{Role \& Description} \\ \hline
+\textbf{Administrator} & \textbf{The System Guardian.} Does not participate in daily inventory operations. Responsibilities include system integrity maintenance, managing user accounts (RBAC assignment), configuring global settings, and monitoring audit logs for security compliance. \\ \hline
+\textbf{Warehouse Manager} & \textbf{The Strategist.} Requires high-level access to data insights.Utilizes the system to audit transaction history, view real-time SignalR dashboards, and \textbf{interact with the AI Assistant} to query stock status or generate summary reports using natural language. \\ \hline
+\textbf{Staff} & \textbf{The Operator.} Engaged in ground-level activities. Requires a streamlined interface optimized for speed. Primary tasks include creating import/export tickets, validating \textbf{OCR-scanned invoices}, and coordinating with the team via the \textbf{Internal Chat Room}. \\ \hline
+\end{tabular}
+\label{tab:actors}
+\end{table}
+
+\subsection{Functional Specifications}
+To clarify the system's capabilities, the requirements are broken down into specific functional modules:
+
+\begin{itemize}
+    \item \textbf{FR-01: Authentication \& Authorization:} The system must secure access via JWT Tokens and strictly enforce RBAC policies (e.g., Staff cannot access Admin configurations).
+    \item \textbf{FR-02: Inventory Management:} Users can perform CRUD operations on Products, Categories, and Units. The system must prevent negative stock levels.
+    \item \textbf{FR-03: Intelligent Assistance:} The \textbf{AI Chatbot} must process natural language queries (e.g., "Show me low stock items") and respond with structured data tables or summaries.
+    \item \textbf{FR-04: Real-time Communication:} 
+    \begin{itemize}
+        \item The \textbf{Internal Chat} must allow instant messaging between logged-in users.
+        \item The \textbf{Smart Mailing} system must automatically email invoices to partners upon transaction completion.
+    \end{itemize}
+    \item \textbf{FR-05: Transaction Processing:} The system must support manual entry and OCR-based entry for Import/Export receipts, ensuring atomic updates to inventory and partner debts.
+\end{itemize}
+
+\subsection{Use Case Diagram}
+To visualize the interaction between actors and the system functionalities, a General Use Case Diagram was designed. This serves as the blueprint for the Application Layer logic.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/usecase_diagram.png}
+    \caption{General Use Case Diagram of Warehouse Pro}
+    \label{fig:usecase_diagram}
+\end{figure}
+
+% =================================================================
+% 3.3 ĐẶC TẢ USE CASE CHI TIẾT (DETAILED SPECIFICATION)
+% =================================================================
+\section{Detailed Use Case Specifications}
+Among the numerous features implemented, I have chosen the five most essential use cases to present in detail. These constitute the fundamental procedures that exemplify the system's principal functionalities and technical complexity.
+
+% --- UC-01: LOGIN ---
+\subsubsection{UC-01: User Authentication (Login)}
+This marks the initial access point of the application. Since I adopted a stateless architecture, this use case concentrates on generating the secure token (JWT) necessary for all subsequent requests. Table \ref{tab:uc01_login} outlines the logical flow.
+
+\begin{table}[H]
+\centering
+\caption{Specification for UC-01: Login}
+\label{tab:uc01_login}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Use Case ID} & UC-01 \\ \hline
+\textbf{Use Case Name} & \textbf{Login to System} \\ \hline
+\textbf{Primary Actor} & All Actors (Admin, Manager, Staff) \\ \hline
+\textbf{Pre-conditions} & The user must have a valid account credential registered by the Administrator. \\ \hline
+\textbf{Main Flow} & 
+1. User launches the web application. \newline
+2. User inputs their email and password into the secure login form. \newline
+3. User triggers the "Login" button. \newline
+4. \textbf{System:} Validates input format (Regex check for email syntax). \newline
+5. \textbf{System:} Hashes the input password and compares it against the stored BCrypt hash in the SQL database. \newline
+6. \textbf{System:} If valid, generates a \textbf{JWT Token} containing user claims (UserID, Role, Expiration) and returns it to the client. \newline
+7. System stores the token in an HttpOnly Cookie and redirects the User to the Dashboard. \\ \hline
+\textbf{Alternative Flow} & 
+\textbf{5a. Wrong Credentials:} The API returns a 401 Unauthorized status. The frontend displays "Invalid Email or Password". \newline
+\textbf{5b. Account Locked:} If the user is flagged as inactive, access is denied with an "Account Locked" message. \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/ui_login.png}
+    \caption{UI Mockup for Login Screen}
+    \label{fig:ui_login}
+\end{figure}
+
+% --- UC-02: IMPORT ---
+\subsubsection{UC-02: Import Goods (Inbound)}
+Efficiency and precision during the receiving process are of utmost importance. To address this, I implemented two input methods: manual barcode scanning and automated Invoice OCR. Table \ref{tab:uc02_import} describes the detailed flow.
+
+\begin{table}[H]
+\centering
+\caption{Specification for UC-02: Create Import Ticket}
+\label{tab:uc02_import}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Use Case ID} & UC-02 \\ \hline
+\textbf{Use Case Name} & \textbf{Create Import Ticket (Inbound)} \\ \hline
+\textbf{Primary Actor} & Staff \\ \hline
+\textbf{Pre-conditions} & Suppliers must exist in the Master Data. \\ \hline
+\textbf{Main Flow} & 
+1. Staff navigates to the "Import Management" interface and clicks "New Ticket." \newline
+2. Staff selects a Supplier from the searchable dropdown list. \newline
+3. \textbf{Option A (Manual):} Staff scans the product barcode. The system retrieves product info via API and adds a line item. \newline
+4. \textbf{Option B (OCR - Smart Entry):} Staff uploads an image of the paper invoice. The \textbf{Tesseract Engine} scans the image, extracts text, and automatically populates the product list table. \newline
+5. \textbf{System:} Calculates line totals and grand total in real-time. \newline
+6. Staff reviews the data and clicks "Submit Ticket". \newline
+7. \textbf{System:} Executes an atomic transaction to: Create the Ticket, Increase Stock Quantity, and Record Debt for the supplier. \\ \hline
+\textbf{Post-conditions} & Inventory is updated, and an automated email notification is sent to the supplier (if configured). \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/ui_import.png}
+    \caption{UI Mockup for Create Import Ticket Screen}
+    \label{fig:ui_import}
+\end{figure}
+
+% --- UC-03: AI ASSISTANT ---
+\subsubsection{UC-03: Intelligent Query with AI Assistant}
+This feature replaces traditional complex filter forms. I integrated a Generative AI module (Llama 3.1) to allow Managers to interact with warehouse data using Natural Language.
+
+\begin{table}[H]
+\centering
+\caption{Specification for UC-03: AI Natural Language Query}
+\label{tab:uc03_ai}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Use Case ID} & UC-03 \\ \hline
+\textbf{Use Case Name} & \textbf{Query Data via AI Assistant} \\ \hline
+\textbf{Primary Actor} & Warehouse Manager \\ \hline
+\textbf{Pre-conditions} & The Semantic Kernel service is initialized and the local LLM is running. \\ \hline
+\textbf{Main Flow} & 
+1. Manager opens the "AI Assistant" chat widget. \newline
+2. Manager types a natural language query (e.g., \textit{"Show me all products with stock below 10"}). \newline
+3. \textbf{System (Semantic Kernel):} Analyzes the intent and invokes the corresponding function (e.g., \texttt{GetLowStockProducts()}). \newline
+4. \textbf{System:} Executes the SQL query and returns raw JSON data to the AI. \newline
+5. \textbf{System (AI):} The AI formats the JSON into a human-readable summary or a structured table. \newline
+6. Manager views the result and can ask follow-up questions (e.g., \textit{"Create an export plan for them"}). \\ \hline
+\textbf{Exception Flow} & 
+\textbf{3a. Unknown Intent:} If the AI cannot understand the request, it replies: "I can only assist with Inventory and Transaction queries. Please try again." \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/ui_ai_chat.png}
+    \caption{UI Mockup for AI Assistant Interaction}
+    \label{fig:ui_ai_chat}
+\end{figure}
+
+% --- UC-04: INTERNAL CHAT ---
+\subsubsection{UC-04: Internal Communication (Real-time Chat)}
+To reduce external distractions and enhance data security, I incorporated an internal real-time messaging module powered by \textbf{SignalR}.
+
+\begin{table}[H]
+\centering
+\caption{Specification for UC-04: Internal Chat System}
+\label{tab:uc04_chat}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Use Case ID} & UC-04 \\ \hline
+\textbf{Use Case Name} & \textbf{Internal Real-time Messaging} \\ \hline
+\textbf{Primary Actor} & All Actors \\ \hline
+\textbf{Pre-conditions} & User is logged in and connected to the `ChatHub`. \\ \hline
+\textbf{Main Flow} & 
+1. User opens the Chat Widget and selects a colleague from the online list. \newline
+2. User types a message and hits Enter. \newline
+3. \textbf{System (Backend):} Receives the payload via WebSocket, saves the message to the database, and pushes it to the recipient's stream. \newline
+4. \textbf{System (Frontend):} The recipient's UI updates immediately without refreshing the page. \newline
+5. If the recipient is currently looking at another screen, a "New Message" badge notification appears. \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/impl_chat_ui.png}
+    \caption{UI Mockup for Internal Chat Widget}
+    \label{fig:ui_chat}
+\end{figure}
+
+% --- UC-05: DASHBOARD ---
+\subsubsection{UC-05: Dashboard \& Analytics}
+The Dashboard serves as the central command center, utilizing \textbf{Chart.js} for visualization and **SignalR** for live updates.
+
+\begin{table}[H]
+\centering
+\caption{Specification for UC-05: View Dashboard}
+\label{tab:uc05_dashboard}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+\hline
+\textbf{Use Case ID} & UC-05 \\ \hline
+\textbf{Use Case Name} & \textbf{View Operational Dashboard} \\ \hline
+\textbf{Primary Actor} & Warehouse Manager \\ \hline
+\textbf{Main Flow} & 
+1. User accesses the Dashboard. \newline
+2. \textbf{System:} Aggregates data (Total Inventory Value, Orders Today, Revenue) and renders KPI Cards and Charts. \newline
+3. User interacts with time filters (e.g., "This Week" vs "Last Month"). The charts update dynamically. \newline
+4. \textbf{Real-time Event:} When a Staff member completes an Import/Export ticket (UC-02), the Dashboard receives a SignalR event and automatically refreshes the "Recent Transactions" table without user intervention. \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/ui_dashboard.png}
+    \caption{UI Mockup for The Main Dashboard}
+    \label{fig:ui_dashboard}
+\end{figure}
+
+
+% =================================================================
+% 3.4 THIẾT KẾ CƠ SỞ DỮ LIỆU (DATABASE DESIGN)
+% =================================================================
+\section{Database Design}
+Following the definition of the business logic and entities in the preceding stages, the subsequent task was to develop a storage schema that is both efficient and consistent.  Since I am employing **Entity Framework Core**, I have adopted the **Code-First** methodology.  This indicates that the database schema is automatically derived from my C\# classes, guaranteeing that the code and the database remain consistently aligned without the need for manual SQL scripting.
+
+\subsection{Entity-Relationship Diagram (ERD)}
+Figure \ref{fig:erd_diagram} provides a visual representation of the physical data model.
+
+\textbf{Design Highlight - The "Partner" Strategy:}
+In numerous conventional systems, Customers and Suppliers are maintained in two distinct tables.  However, during the analysis phase, I recognized that in an actual supply chain, a partner can assume both roles (we may purchase basic materials from them and sell finalized products back to them).  Therefore, I resolved to consolidate them into a single \\textbf{Partner} entity.  This decision substantially streamlined the process of monitoring aggregate debts and transaction records.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/erd_final.png}
+    \caption{Entity-Relationship Diagram (ERD) generated from Domain Entities}
+    \label{fig:erd_diagram}
+\end{figure}
+
+\subsection{Database Schema Specification}
+The system comprises more than 15 tables. To maintain the report's conciseness and relevance, I will refrain from listing every individual query table (such as `Unit` or `Category`). Instead, I will concentrate on the detailed specifications of the fundamental tables responsible for managing essential business operations.
+
+\subsection{Database Schema Specification}
+Below is the comprehensive specification of the fundamental tables derived from the C\# Domain Entities.
+
+% --- Table: Product ---
+\subsubsection{Table: Product}
+Stores inventory items. The \textit{Category} is stored as a string to simplify the hierarchy for this version.
+\begin{table}[H]
+\centering
+\caption{Schema of \textbf{Product} Table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{2.5cm}|p{6cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+SKU & VARCHAR(50) & Unique & QR/Barcode series. \\ \hline
+Name & NVARCHAR(200) & Not Null & Product name. \\ \hline
+Category & NVARCHAR(100) & Not Null & Grouping category. \\ \hline
+Price & DECIMAL(18,2) & Not Null & Selling price. \\ \hline
+StockQuantity & INT & Default 0 & Current inventory on hand. \\ \hline
+MinStockLevel & INT & Default 0 & Threshold for safety stock alerts. \\ \hline
+Unit & NVARCHAR(20) & Default 'PCS' & Unit of measurement. \\ \hline
+\end{tabular}
+\end{table}
+
+% --- Table: Partner ---
+\subsubsection{Table: Partner}
+Represents both Suppliers and Customers. The \textit{Type} column distinguishes the role.
+\begin{table}[H]
+\centering
+\caption{Schema of \textbf{Partner} Table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{2.5cm}|p{6cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+Name & NVARCHAR(200) & Not Null & Partner name. \\ \hline
+Type & VARCHAR(20) & Not Null & 'SUPPLIER' or 'CUSTOMER'. \\ \hline
+Phone & VARCHAR(20) & Nullable & Contact number. \\ \hline
+DebtAmount & DECIMAL(18,2) & Default 0 & Current debt(Receivable/Payable). \\ \hline
+IsActive & BIT & Default 1 & Soft delete status. \\ \hline
+\end{tabular}
+\end{table}
+
+% --- Table: Transaction ---
+\subsubsection{Table: Transaction}
+Documents inventory transactions. It establishes a connection with a Partner to monitor the sender and recipient of the products.
+\begin{table}[H]
+\centering
+\caption{Schema of \textbf{Transaction} Table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{3cm}|p{5.5cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+TransactionDate & DATETIME & Default Now & Time of occurrence. \\ \hline
+Type & VARCHAR(20) & Not Null & 'IMPORT' or 'EXPORT'. \\ \hline
+TotalAmount & DECIMAL(18,2) & Not Null & Total value of the transaction. \\ \hline
+Status & VARCHAR(20) & 'COMPLETED' & Processing status. \\ \hline
+PartnerId & GUID & FK & Reference to Partner table. \\ \hline
+\end{tabular}
+\end{table}
+
+% --- Table: Payment ---
+\subsubsection{Table: Payment}
+Tracks financial flows associated with Partners (Debt settlement).
+\begin{table}[H]
+\centering
+\caption{Schema of \textbf{Payment} Table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{2.5cm}|p{6cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+PaymentDate & DATETIME & Default Now & Time of payment. \\ \hline
+Type & VARCHAR(20) & Not Null & 'RECEIPT' (Thu) or 'PAYMENT' (Chi). \\ \hline
+Amount & DECIMAL(18,2) & Not Null & Money amount. \\ \hline
+PartnerId & GUID & FK & Reference to Partner table. \\ \hline
+\end{tabular}
+\end{table}
+
+% --- Table: AuditLog ---
+\subsubsection{Table: AuditLog}
+Ensures responsibility by monitoring modifications within the system.
+\begin{table}[H]
+\centering
+\caption{Schema of \textbf{AuditLog} Table}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{2.5cm}|p{6cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+UserId & VARCHAR(50) & Not Null & ID/Name of the user performing action. \\ \hline
+Action & VARCHAR(50) & Not Null & 'CREATE','UPDATE','DELETE'. \\ \hline
+TableName & VARCHAR(50) & Not Null & Affected table name. \\ \hline
+OldValues & NTEXT & Nullable & JSON snapshot before change. \\ \hline
+NewValues & NTEXT & Nullable & JSON snapshot after change. \\ \hline
+\end{tabular}
+\end{table}
+
+
+\textbf{Table: Message} \\
+Records the communication history between users. The design accommodates future expansion for file attachments and group conversations.
+
+\begin{table}[H]
+\centering
+\caption{Schema of Message Table}
+\label{tab:schema_message}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|p{3cm}|p{3cm}|p{2.5cm}|p{5.5cm}|}
+\hline
+\textbf{Column} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\ \hline
+Id & GUID & PK & Unique identifier. \\ \hline
+SenderId & GUID & FK (User) & The user sending the message. \\ \hline
+ReceiverId & GUID & FK (User) & The recipient (Null if Group chat). \\ \hline
+Content & NVARCHAR(MAX) & Not Null & Text content or File URL. \\ \hline
+MessageType & VARCHAR(20) & Default 'TEXT' & 'TEXT', 'IMAGE', or 'TASK'. \\ \hline
+SentAt & DATETIME & Default Now & Timestamp of the message. \\ \hline
+IsRead & BIT & Default 0 & Read receipt status. \\ \hline
+\end{tabular}
+\end{table}
+
+% =================================================================
+% 3.5 THIẾT KẾ CẤU TRÚC (STRUCTURAL DESIGN)
+% =================================================================
+\section{Structural Design (Class Diagram)}
+This section describes the internal object-oriented architecture of the backend application.  The system employs the **Repository Pattern** and **Dependency Injection (DI)** to establish informal linkage between layers.
+
+\subsection{Backend Class Structure}
+Figure \ref{fig:class_diagram} illustrates the interactions within the "Transaction Module" as a representative example. The structure consists of four main components:
+
+\begin{itemize}
+    \item \textbf{Entities (The Domain Layer):} 
+    These are the core POCO (Plain Old CLR Objects) classes. To keep the code clean and avoid repetition, I created a \texttt{BaseEntity} class that holds common properties like \texttt{Id} and \texttt{CreatedDate}, which \texttt{Product} and \texttt{Transaction} inherit from. I also applied the "Rich Domain Model" principle here, putting logic like \texttt{UpdateStock()} directly inside the entity rather than leaving them as empty data holders.
+
+    \item \textbf{Repositories (The Abstraction):} 
+    Rather than explicitly implementing Entity Framework code throughout, I employed interfaces such as ITransactionRepository. This functions as a delineation. It enables me to encapsulate complex LINQ queries within the infrastructure layer, thereby maintaining the clarity of the business logic and facilitating the process of writing unit tests later through the use of mocked interfaces.
+
+    \item \textbf{Services (The Business Logic):} 
+    This is the core component where the application's "brain" is situated. For example, the \texttt{TransactionService} does not merely store data; it manages the entire workflow. Prior to generating an Export Ticket, it is necessary to first consult the Product entity to confirm that `CurrentStock >= RequestedQuantity`.  If the validation check fails, the service raises a custom exception, thereby preventing the entry of invalid data into the database.
+
+    \item \textbf{Controllers (The Entry Point):} 
+    I designed the \texttt{TransactionController} to be as streamlined as feasible. Its sole responsibility is to accept HTTP requests and convert the incoming JSON data to Data Transfer Objects (DTOs). Utilizing DTOs rather than transmitting Entities directly ensures that I do not inadvertently disclose sensitive database fields (such as internal identifiers or credentials) to the frontend.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/class_diagram.png}
+    \caption{Class Diagram illustrating the 3-Tier Architecture Flow}
+    \label{fig:class_diagram}
+\end{figure}
+
+\subsection{Design Patterns Applied}
+Developing code that merely functions is insufficient; it must also be maintainable and resilient. During the development of Warehouse Pro, I observed that as the intricacy increased, the codebase began to become inflexible. To address this, I rigorously implemented three industry-standard design patterns:
+
+\begin{enumerate}
+    \item \textbf{Repository Pattern:} 
+    Initially, I observed myself duplicating LINQ queries across various locations. To resolve this issue, I employed the Repository Pattern. It functions as an intermediary, separating my business logic from the data access layer. Now, when I need to optimize a query, I only modify it in a single location (the Repository) without altering the Service logic.
+    \item \textbf{Unit of Work:} 
+    In a warehouse management system, the integrity of data is imperative. I encountered a significant risk: what if a "Import Ticket" is generated, but the "Stock Update" fails partway through due to a system crash? The \textbf{Unit of Work} pattern addresses this by consolidating these operations into a single transaction. It guarantees that either all operations succeed or all are rolled back, thereby preventing the occurrence of phantom data.
+    \item \textbf{Dependency Injection (DI):} 
+    Rather than manually instantiating classes with the `new` keyword, which results in close coupling, I employed the integrated Dependency Injection Container of .NET 8. By utilizing constructor injection for dependencies, my components achieve loose coupling. This was especially beneficial when I needed to replace the actual Email Service with a "Mock Service" during testing, without having to modify the existing code.
+\end{enumerate}
+
+% =================================================================
+% 3.6 THIẾT KẾ HÀNH VI (BEHAVIORAL DESIGN)
+% =================================================================
+\section{Behavioral Design (Sequence Diagrams)}
+While the Class Diagram depicts the static structure (the "skeleton"), the Sequence Diagrams illustrate the dynamic behavior (the "blood flow") of the system. In this section, I illustrate precisely how the objects collaborate to accomplish complex business scenarios.
+
+\subsection{Import Goods Process with Automated Mailing (UC-02)}
+This is a critical operation involving multiple subsystems: Data Validation, Inventory Update, Transaction Logging, and External Notification. Figure \ref{fig:seq_import} details the interaction flow.
+
+The challenge lies in maintaining \textbf{Data Consistency}. The system utilizes the \textbf{Unit of Work} pattern to ensure atomicity.
+\begin{itemize}
+    \item \textbf{Step 1 (Submission):} The Staff submits the ticket form via the React Client.
+    \item \textbf{Step 2 (Orchestration):} The \texttt{TransactionController} receives the request and delegates it to the \texttt{TransactionService}.
+    \item \textbf{Step 3 (Atomic Persistence):} The Service opens a database transaction. It iterates through items to update `StockQuantity` in the \texttt{ProductRepository} and saves the ticket record.
+    \item \textbf{Step 4 (Side Effect - Email):} Upon successful commit, the Service triggers the \texttt{EmailService}. This service loads the "Import Receipt Template", fills in the data, and dispatches an email to the Supplier via SMTP.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/seq_import.png}
+    \caption{Sequence Diagram for Import Process with Email Trigger}
+    \label{fig:seq_import}
+\end{figure}
+
+\subsection{AI Intelligent Query Process (UC-03)}
+Figure \ref{fig:seq_ai} illustrates the sophisticated interaction between the classic Web API and the Generative AI engine (Semantic Kernel). This is not a linear CRUD flow but a **"Function Calling"** loop.
+
+\begin{itemize}
+    \item \textbf{Step 1 (Prompt):} The Manager sends a natural language query (e.g., "Check low stock items") via the Chat Interface.
+    \item \textbf{Step 2 (Intent Analysis):} The \texttt{AIService} initializes the \textbf{Semantic Kernel}. It sends the prompt to the Local LLM (Llama 3.1) to analyze the intent.
+    \item \textbf{Step 3 (Tool Invocation):} The LLM determines that it needs data and requests the Kernel to execute the \texttt{GetLowStockFunction()}.
+    \item \textbf{Step 4 (Data Retrieval):} The Kernel executes the C\# native code, querying the \texttt{ProductRepository}, and feeds the raw JSON result back to the LLM.
+    \item \textbf{Step 5 (Summarization):} The LLM processes the JSON and generates a natural language summary to return to the Client.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/seq_forecast.png}
+    \caption{Sequence Diagram for AI Function Calling Flow}
+    \label{fig:seq_ai}
+\end{figure}
+
+\subsection{Real-time Internal Chat Process (UC-04)}
+Standard HTTP polling is inefficient for real-time messaging. To achieve instant communication, I implemented the \textbf{Push Model} using SignalR WebSockets as shown in Figure \ref{fig:seq_chat}.
+
+\begin{itemize}
+    \item \textbf{Step 1 (Connection):} Upon login, the React Client establishes a persistent WebSocket connection to the \texttt{ChatHub}.
+    \item \textbf{Step 2 (Broadcasting):} When User A sends a message, it is transmitted to the Hub.
+    \item \textbf{Step 3 (Persistence):} The Hub first saves the message to the \texttt{MessageRepository} (SQL Server) to ensure chat history is preserved.
+    \item \textbf{Step 4 (Push Notification):} The Hub identifies User B's active connection ID and "pushes" the payload directly to their client. The React UI updates immediately without a page reload.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{images/seq_chat.png}
+    \caption{Sequence Diagram for SignalR Chat Flow}
+    \label{fig:seq_chat}
+\end{figure}
+
+
+
+% =================================================================
+% TỔNG KẾT CHƯƠNG 3
+% =================================================================
+\section{Chapter Summary}
+In this chapter, I have transformed the theoretical concepts and requirements into a tangible system design. The objective was not merely to produce diagrams but to develop a comprehensive design that guarantees the "Warehouse Pro" system is scalable, maintainable, and intelligent.
+
+Key achievements in this design phase include:
+\begin{itemize}
+    \item \textbf{Architectural Foundation:} I established a robust backbone using \textbf{Clean Architecture} combined with a containerized \textbf{Docker} environment to solve deployment consistency issues.
+    \item \textbf{User-Centric Workflows:} Through the examination of five essential Use Cases, I elucidated how various actors (Admin, Manager, Staff) engage with the system to execute routine operations.
+    \item \textbf{Data Integrity:} I constructed a normalized \textbf{Database Schema} using the Code-First approach, ensuring that complex relationships like Debt and Inventory History are handled accurately.
+    \item \textbf{Dynamic Behavior:} Using \textbf{Sequence Diagrams}, I conceptualized the internal logic of the system, demonstrating that the transition from the Frontend to the Backend is coherent and efficiently structured.
+    \item \textbf{Intelligence Integration:} I successfully defined the mathematical models for the \textbf{AI Forecasting} and \textbf{Smart Alert} algorithms, moving the system beyond a simple CRUD application.
+\end{itemize}
+
+With the architectural design and algorithmic logic fully defined, the next chapter, \textbf{Chapter 4: Implementation \& Results}, will demonstrate how these designs were turned into working code and the actual performance of the system.
