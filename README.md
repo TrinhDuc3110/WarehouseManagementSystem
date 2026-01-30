@@ -6,16 +6,7 @@
 > 
 > **Topic:** Design and Implementation of an Intelligent Warehouse Management System leveraging AI and QR Code Technology.
 
----
 
-## 👨‍💻 Student Information
-
-| Role | Name | Student ID | Major |
-| :--- | :--- | :--- | :--- |
-| **Student** | **Trịnh Văn Đức** | **ITITIU21182** | Information Technology |
-| **Supervisor** | Mr. Duong | | Faculty of IT |
-
----
 
 ## 📖 Executive Summary
 
